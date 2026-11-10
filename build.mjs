@@ -15,7 +15,7 @@ const cut = src.indexOf("</style>") + "</style>".length;
 const inline = f => `<script>${readFileSync(join(here, "vendor/GSAP/dist", f), "utf8")}</script>`;
 const body = src.slice(cut)
   .replace(/<script src="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/gsap\/[^/]+\/([\w.]+)"><\/script>/g, (_, f) => inline(f))
-  .replace('rel="noopener" hidden>PDF', 'rel="noopener">PDF'); // the PDF link only works outside the Claude artifact
+  .replaceAll('rel="noopener" hidden>PDF', 'rel="noopener">PDF'); // the PDF links only work outside the Claude artifact
 const out = join(here, "index.html");
 writeFileSync(out, `<!DOCTYPE html>
 <html lang="en">

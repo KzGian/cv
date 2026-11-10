@@ -2,14 +2,16 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: one A4 sheet. Big name header on a blueprint grid, then a wide
-   career timeline (left) beside a narrow reference column (right). Motion is
-   one load sequence plus a live grid in the header that follows the pointer. */
+/* Two layouts from one document.
+   Print (base rules): one A4 sheet, name header over a career timeline beside a reference column.
+   Screen (@media screen): a scrolling site that scales with the monitor. Full-height hero on the
+   live grid, then sections with a sticky heading on the left and content on the right, revealed
+   as they scroll in. */
 :root {
   color-scheme: dark;
   --ink: #0e1b2c;        /* page ground, deep ink blue */
-  --sheet: #13243a;      /* the sheet itself */
-  --raise: #1a3049;      /* chips, strip */
+  --sheet: #13243a;      /* raised surface */
+  --raise: #1a3049;      /* chips */
   --line: #2b4563;       /* rules and borders */
   --paper: #efe8d8;      /* primary text, warm ivory */
   --mist: #a9b9cb;       /* secondary text */
@@ -35,17 +37,20 @@ a:hover { color: var(--amber); }
 :focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 3px; }
 ul { margin: 0; padding: 0; list-style: none; }
 h1, h2, h3, p { margin: 0; }
+button { font: inherit; }
+
+/* Screen-only pieces are hidden in the base (print) layout */
+.progress, .who, .nav, .cue, .sub, .foot { display: none; }
+.hero-in, .sec-head, .groups { display: contents; }
 
 .bar {
   width: 100%; max-width: 210mm; margin: 0 auto 12px;
   display: flex; justify-content: flex-end; align-items: center; gap: 10px;
   font: 500 11px var(--mono); color: var(--mist);
 }
+.acts { display: flex; align-items: center; gap: 10px; }
 .lang { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
-.lang button {
-  font: inherit; color: var(--mist); background: transparent; border: 0;
-  padding: 6px 12px; cursor: pointer;
-}
+.lang button { color: var(--mist); background: transparent; border: 0; padding: 6px 12px; cursor: pointer; }
 .lang button[aria-pressed="true"] { background: var(--amber); color: var(--ink); }
 .pdf:not([hidden]) { display: inline-block; border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; color: var(--paper); }
 
@@ -66,15 +71,13 @@ h1, h2, h3, p { margin: 0; }
 }
 .head > * { position: relative; }
 .head > canvas.grid { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.name {
-  font: 800 50px/0.95 var(--display); letter-spacing: -0.02em; text-wrap: balance;
-}
+.name { font: 800 50px/0.95 var(--display); letter-spacing: -0.02em; text-wrap: balance; }
 .name .w { display: inline-block; overflow: hidden; padding: .08em 0 .12em; margin: -.08em 0 -.12em; vertical-align: top; }
 .name .c { display: inline-block; }
 .name.live .w { overflow: visible; }
 .name.live .c {
   transition: transform .35s cubic-bezier(.2, .8, .2, 1), color .35s;
-  transform: translateY(calc(var(--k, 0) * -7px));
+  transform: translateY(calc(var(--k, 0) * -0.08em));
   color: color-mix(in srgb, var(--amber) calc(var(--k, 0) * 100%), var(--paper));
 }
 .role { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
@@ -90,10 +93,7 @@ h1, h2, h3, p { margin: 0; }
 .cols { flex: 1; display: grid; grid-template-columns: minmax(0, 1.72fr) minmax(0, 1fr); }
 .main { padding: 14px 28px 12px 40px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .side { padding: 14px 34px 12px 26px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 18px; min-width: 0; }
-h2 {
-  font: 700 17px/1.2 var(--display); color: var(--amber);
-  padding-bottom: 7px; border-bottom: 1px solid var(--line);
-}
+h2 { font: 700 17px/1.2 var(--display); color: var(--amber); padding-bottom: 7px; border-bottom: 1px solid var(--line); }
 section { display: flex; flex-direction: column; gap: 12px; }
 .cols section { position: relative; } /* keeps exported PDF text in reading order */
 
@@ -103,19 +103,14 @@ section { display: flex; flex-direction: column; gap: 12px; }
   content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--line);
   transform-origin: top; transform: scaleY(var(--rail));
 }
-.job { --dot: 1; position: relative; padding-left: 21px; display: flex; flex-direction: column; gap: 7px; }
-.job::before {
-  content: ""; position: absolute; left: -4px; top: 5px; width: 9px; height: 9px;
-  border-radius: 50%; background: var(--sheet); border: 1.5px solid var(--mist);
-  transform: scale(var(--dot)); z-index: 1;
+.job { --dot: 1; --d: 9px; position: relative; padding-left: 21px; display: flex; flex-direction: column; gap: 7px; }
+.job::before, .job.now::after {
+  content: ""; position: absolute; left: calc(var(--d) / -2 + .5px); top: 5px; width: var(--d); height: var(--d); border-radius: 50%;
 }
+.job::before { background: var(--sheet); border: 1.5px solid var(--mist); transform: scale(var(--dot)); z-index: 1; }
 .job.now::before { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 4px var(--amber-soft); }
-.job.now::after {
-  content: ""; position: absolute; left: -4px; top: 5px; width: 9px; height: 9px;
-  border-radius: 50%; border: 1px solid var(--amber); animation: ping 2.4s ease-out infinite;
-}
+.job.now::after { border: 1px solid var(--amber); animation: ping 2.4s ease-out infinite; }
 @keyframes ping { 0% { transform: scale(1); opacity: .8; } 70%, 100% { transform: scale(3.2); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .job.now::after { animation: none; opacity: 0; } }
 .job h3 { font: 700 15px/1.25 var(--display); }
 .meta { display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: baseline; }
 .meta b { font-weight: 600; font-size: 13px; }
@@ -129,11 +124,11 @@ section { display: flex; flex-direction: column; gap: 12px; }
 .sheet.tracing .tasks li.hit::before { width: 10px; left: -4px; }
 .tasks strong { font-weight: 600; color: #fff; }
 
-/* Side column */
+/* Reference column */
 .group { display: flex; flex-direction: column; gap: 6px; }
 .group h3 { font: 600 12px var(--body); color: var(--paper); }
 .tags { display: flex; flex-wrap: wrap; gap: 5px; }
-.tags li { font: 400 10.5px/1.2 var(--mono); color: var(--paper); background: var(--raise); border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; transition: border-color .2s, color .2s; }
+.tags li { font: 400 10.5px/1.2 var(--mono); color: var(--paper); background: var(--raise); border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; transition: border-color .2s, color .2s, background .2s; }
 .tags li:hover { border-color: var(--amber); color: var(--amber); }
 .tags li[data-k] { cursor: pointer; }
 .tags li.on { background: var(--amber); border-color: var(--amber); color: var(--ink); }
@@ -147,13 +142,155 @@ section { display: flex; flex-direction: column; gap: 12px; }
 .langs b { font-weight: 600; }
 .langs span { font: 400 10.5px var(--mono); color: var(--amber); text-align: right; }
 
-@media (max-width: 700px) {
-  .cols { grid-template-columns: 1fr; }
-  .head { padding: 26px 20px 20px; }
-  .name { font-size: 40px; }
-  .main { padding: 22px 20px; }
-  .side { padding: 22px 20px 28px; border-left: 0; border-top: 1px solid var(--line); }
+/* ---------- Screen: a site that scales with the monitor ---------- */
+@media screen {
+  html { font-size: clamp(15px, calc(11.7px + .241vw), 20px); scroll-behavior: smooth; }
+  :root {
+    --gl: max(clamp(16px, 4vw, 4.5rem), env(safe-area-inset-left, 0px));
+    --gr: max(clamp(16px, 4vw, 4.5rem), env(safe-area-inset-right, 0px));
+    --wrap: 96rem;
+  }
+  body { font-size: 1rem; line-height: 1.6; padding: 0; }
+  .hero-in, .cols, .foot-in {
+    width: min(100%, calc(var(--wrap) + var(--gl) + var(--gr))); margin-inline: auto;
+    padding-left: var(--gl); padding-right: var(--gr);
+  }
+
+  /* Fixed top bar */
+  .progress {
+    display: block; position: fixed; left: 0; right: 0; top: env(safe-area-inset-top, 0px); height: 2px; z-index: 21;
+    background: var(--amber); transform-origin: left; transform: scaleX(0);
+  }
+  .bar {
+    position: fixed; inset: 0 0 auto; z-index: 20; max-width: none; margin: 0;
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.5rem;
+    padding-top: calc(env(safe-area-inset-top, 0px) + .75rem); padding-bottom: .75rem;
+    padding-left: var(--gl); padding-right: var(--gr);
+    font-size: .8rem; border-bottom: 1px solid transparent;
+    transition: background-color .35s, border-color .35s;
+  }
+  .bar.past { background: color-mix(in srgb, var(--ink) 88%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom-color: var(--line); }
+  .who {
+    display: block; justify-self: start; font: 700 1.05rem/1 var(--display); color: var(--paper);
+    background: none; border: 0; padding: 0; cursor: pointer;
+    opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity .35s, transform .35s;
+  }
+  .bar.past .who { opacity: 1; transform: none; pointer-events: auto; }
+  .nav { display: flex; gap: .25rem; }
+  .nav button { color: var(--mist); background: none; border: 0; padding: .45rem .9rem; border-radius: 99px; cursor: pointer; transition: color .2s, background-color .2s; }
+  .nav button:hover { color: var(--paper); }
+  .nav button[aria-current="true"] { background: var(--amber); color: var(--ink); }
+  .acts { justify-self: end; gap: .6rem; }
+  .lang button, .pdf:not([hidden]) { padding: .45rem .85rem; }
+  .lang, .pdf:not([hidden]) { border-radius: 99px; }
+  .pdf:not([hidden]):hover { border-color: var(--amber); }
+
+  /* Sheet becomes the page */
+  .sheet { max-width: none; min-height: 0; margin: 0; border: 0; background: transparent; display: block; }
+
+  /* Hero */
+  .head {
+    min-height: min(100vh, 66rem); min-height: min(100svh, 66rem);
+    padding: calc(env(safe-area-inset-top, 0px) + 6rem) 0 6rem;
+    justify-content: center; gap: 0; background-color: var(--sheet);
+  }
+  .hero-in { display: flex; flex-direction: column; gap: 1.7rem; }
+  .name { font-size: clamp(3rem, 8.4vw, 10.5rem); line-height: .9; letter-spacing: -.035em; }
+  .role { gap: .4rem 1.3rem; }
+  .role b { font-size: clamp(1.3rem, 2vw, 2.4rem); }
+  .role span { font-size: clamp(.85rem, .9vw, 1.05rem); }
+  .about { font-size: clamp(1.05rem, 1.2vw, 1.45rem); line-height: 1.6; max-width: 56ch; }
+  .contact { font-size: .9rem; gap: .7rem 2.2rem; }
+  .contact svg { width: 1.05rem; height: 1.05rem; }
+  .head > .cue {
+    display: flex; position: absolute; left: 50%; bottom: 1.8rem; transform: translateX(-50%);
+    flex-direction: column; align-items: center; gap: .6rem;
+    font: 500 .75rem var(--mono); color: var(--mist); background: none; border: 0; cursor: pointer;
+  }
+  .cue:hover { color: var(--amber); }
+  .cue i { display: block; width: 1px; height: 2.8rem; background: linear-gradient(var(--amber), transparent); transform-origin: top; animation: drip 2.4s ease-in-out infinite; }
+  @keyframes drip { 0% { transform: scaleY(0); opacity: 1; } 55% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+  /* Sections: sticky heading on the left, content on the right */
+  .cols {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(5rem, 9vw, 10rem) clamp(1.5rem, 3vw, 3.5rem);
+    padding-block: clamp(5rem, 9vw, 10rem) clamp(5rem, 8vw, 9rem);
+  }
+  .main, .side { display: contents; }
+  section { gap: 1.6rem; scroll-margin-top: 6rem; }
+  .sec-head { display: flex; flex-direction: column; gap: .9rem; }
+  h2 { font-size: clamp(1.8rem, 2.7vw, 3.3rem); line-height: 1.05; letter-spacing: -.015em; padding: 0; border: 0; text-wrap: balance; }
+  .sub, .hint { display: block; margin: 0; font: 400 .85rem/1.5 var(--mono); color: var(--mist); max-width: 26ch; }
+  #work { order: 1; } #skills { order: 2; } #certs { order: 3; } #edu { order: 4; } #langs { order: 5; }
+  #work, #skills { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: start; }
+  #work > .sec-head, #skills > .sec-head { grid-column: 1 / span 3; position: sticky; top: 6.5rem; }
+  #work > .jobs, #skills > .groups { grid-column: 4 / -1; }
+  #certs, #edu, #langs { grid-column: span 4; }
+  #certs h2, #edu h2, #langs h2 { font-size: clamp(1.35rem, 1.7vw, 2rem); padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+
+  /* Timeline */
+  .jobs { gap: clamp(3rem, 4.5vw, 5rem); margin-left: .35rem; }
+  .job { --d: .85rem; padding-left: 2.3rem; gap: .9rem; }
+  .job::before, .job.now::after { top: .5rem; }
+  .job h3 { font-size: clamp(1.35rem, 1.8vw, 2.2rem); line-height: 1.15; }
+  .meta { gap: .2rem 1.4rem; }
+  .meta b { font-size: 1.05rem; }
+  .meta span { font-size: .85rem; }
+  .tasks { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr)); gap: 1rem 2.8rem; margin-top: .5rem; }
+  .tasks li { padding-left: 1.25rem; }
+  .tasks li::before { width: .55rem; top: .8em; }
+  .sheet.tracing .tasks li.hit::before { width: .9rem; left: -.35rem; }
+
+  /* Skills and the rest */
+  .groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 2.6rem; }
+  .group { gap: .85rem; }
+  .group h3 { font-size: 1.02rem; }
+  .tags { gap: .45rem; }
+  .tags li { font-size: .82rem; padding: .42rem .7rem; border-radius: .4rem; }
+  .list { gap: 1.3rem; }
+  .list b { font-size: 1.05rem; }
+  .list span { font-size: .85rem; margin-top: .3rem; }
+  .langs { gap: 0; }
+  .langs li { padding-block: .75rem; border-bottom: 1px solid var(--line); }
+  .langs li:first-child { padding-top: 0; }
+  .langs b { font-size: 1.05rem; }
+  .langs span { font-size: .85rem; }
+
+  /* Footer */
+  .foot { display: block; background: var(--sheet); border-top: 1px solid var(--line); }
+  .foot-in { display: flex; flex-direction: column; gap: 1.4rem; padding-block: clamp(5rem, 9vw, 10rem) 3.5rem; }
+  .foot-line { font-size: 1.05rem; color: var(--mist); }
+  .foot-mail {
+    align-self: flex-start; font: 800 clamp(1.9rem, 5.6vw, 7rem)/1 var(--display); letter-spacing: -.03em;
+    color: var(--paper); overflow-wrap: anywhere; transition: color .25s;
+  }
+  .foot-mail:hover { color: var(--amber); }
+  .foot-links { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.2rem; font: 500 .85rem var(--mono); }
+  .foot-links a, .foot-links button { border: 1px solid var(--line); border-radius: 99px; padding: .55rem 1.05rem; color: var(--paper); background: none; cursor: pointer; transition: border-color .2s, color .2s; }
+  .foot-links a:hover, .foot-links button:hover { border-color: var(--amber); color: var(--amber); }
 }
+
+@media screen and (max-width: 960px) {
+  .bar { grid-template-columns: 1fr auto; }
+  .nav { display: none; }
+  .cols { grid-template-columns: minmax(0, 1fr); row-gap: 5rem; }
+  #work, #skills, #certs, #edu, #langs { grid-column: 1 / -1; display: flex; flex-direction: column; }
+  #work > .sec-head, #skills > .sec-head { position: static; }
+  .sub, .hint { max-width: none; }
+}
+@media screen and (max-width: 520px) {
+  .who { display: none; }
+  .bar { grid-template-columns: 1fr; }
+  .head { min-height: 92svh; }
+  .head > .cue { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .job.now::after { animation: none; opacity: 0; }
+  .cue i { animation: none; }
+}
+
 @page { size: A4; margin: 0; }
 @media print {
   :root { padding: 0 !important; }
@@ -163,16 +300,22 @@ section { display: flex; flex-direction: column; gap: 12px; }
 }
 </style>
 
+<div class="progress" aria-hidden="true"></div>
 <div class="bar">
-  <a class="pdf" id="pdf" href="Gianfranco-Casetta-CV-EN.pdf" target="_blank" rel="noopener" hidden>PDF</a>
-  <div class="lang" role="group" aria-label="Language">
-    <button type="button" id="btn-en" data-lang="en" aria-pressed="true">EN</button>
-    <button type="button" id="btn-es" data-lang="es" aria-pressed="false">ES</button>
+  <button type="button" class="who" id="who" tabindex="-1">Gianfranco Casetta</button>
+  <nav class="nav" id="nav" aria-label="Sections"></nav>
+  <div class="acts">
+    <a class="pdf" data-pdf href="Gianfranco-Casetta-CV-EN.pdf" target="_blank" rel="noopener" hidden>PDF</a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="btn-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="btn-es" data-lang="es" aria-pressed="false">ES</button>
+    </div>
   </div>
 </div>
 <main class="sheet" id="sheet"></main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrambleTextPlugin.min.js"></script>
 <script>
 const T = (en, es) => ({ en, es });
@@ -180,17 +323,28 @@ const CV = {
   role: "Infrastructure Specialist",
   focus: T("DevOps and Cloud Engineering on AWS", "DevOps y Cloud Engineering en AWS"),
   about: T(
-    "I started out in datacenter field support, installing storage and running VMware environments, and today I automate how infrastructure changes ship on AWS. Nearly six years across on-prem and cloud taught me to build things others can trust: pipelines that document themselves and releases that pass audit without extra work. I do my best work backing my team and staying calm under pressure.",
-    "Arranqué en soporte de campo de datacenter, instalando storage y operando entornos VMware, y hoy automatizo cómo salen los cambios de infraestructura en AWS. Casi seis años entre on-prem y cloud me enseñaron a construir cosas confiables: pipelines que se documentan solos y releases que pasan auditoría sin trabajo extra. Doy lo mejor acompañando a mi equipo y manteniendo la calma bajo presión."
+    "Started in datacenter field support, installing storage and running VMware for clients; today I work on how infrastructure changes ship on AWS. Nearly six years across on-prem and cloud taught me to value what others can rely on: pipelines that document themselves and releases that pass audit without extra work. I do my best work side by side with my teammates, and I stay calm when things get demanding.",
+    "Empecé en soporte de campo de datacenter, instalando storage y operando VMware para clientes; hoy trabajo en cómo salen los cambios de infraestructura en AWS. Casi seis años entre on-prem y cloud me enseñaron a valorar lo que otros pueden usar con confianza: pipelines que se documentan solos y releases que pasan auditoría sin trabajo extra. Doy lo mejor codo a codo con mis compañeros y mantengo la calma en los momentos exigentes."
   ),
-  hint: T("Pick a skill to see where I used it", "Elegí una skill para ver dónde la usé"),
+  hint: T("Pick a skill to see where it was used", "Elegí una skill para ver dónde se usó"),
   place: T("Ciudad Jardín, Buenos Aires, Argentina", "Ciudad Jardín, Buenos Aires, Argentina"),
+  cue: T("Scroll", "Deslizá"),
+  span: T("2021 – Present", "2021 – Actualidad"),
   h: {
     work: T("Work experience", "Experiencia laboral"),
     skills: T("Skills", "Skills"),
     certs: T("Certifications", "Certificaciones"),
     langs: T("Languages", "Idiomas"),
     edu: T("Education", "Educación")
+  },
+  nav: [
+    ["work", T("Experience", "Experiencia")],
+    ["skills", T("Skills", "Skills")],
+    ["certs", T("Background", "Formación")]
+  ],
+  foot: {
+    line: T("Thanks for reading. Email is the quickest way to reach me.", "Gracias por leer. El mail es la forma más rápida de contactarme."),
+    top: T("Back to top", "Volver arriba")
   },
   jobs: [
     {
@@ -200,18 +354,18 @@ const CV = {
       when: T("May 2024 – Present", "May 2024 – Actualidad"),
       where: "CABA, Argentina",
       tasks: [
-        T("Work across 50+ infrastructure repos, one stack per country, and built and own the shared <strong>CI/CD</strong> repo and its backend (Bitbucket Pipelines for Python, SageMaker and Terraform).",
-          "Trabajo sobre más de 50 repos de infraestructura, un stack por país, y construí y mantengo el repo compartido de <strong>CI/CD</strong> y su backend (Bitbucket Pipelines para Python, SageMaker y Terraform)."),
-        T("Automated Terraform <strong>change management</strong> with security and audit checks: plans and applies are logged on the Jira ticket and approvals sync with the pull request, so documenting and approving a change takes no manual work.",
-          "Automaticé la <strong>gestión de cambios</strong> de Terraform con chequeos de seguridad y auditoría: cada plan y apply queda en el ticket de Jira y las aprobaciones se sincronizan con el pull request, sin pasos manuales."),
-        T("Built the infrastructure and release flow for a real-time <strong>fraud scoring</strong> model on SageMaker, now heading to production.",
-          "Armé la infraestructura y el flujo de release de un modelo de <strong>scoring de fraude</strong> en tiempo real sobre SageMaker, hoy camino a producción."),
-        T("Automated maintenance with <strong>Rundeck and Ansible</strong>: ALB traffic shifting for updates, instance snapshots and unattended Ubuntu patching.",
-          "Automaticé mantenimiento con <strong>Rundeck y Ansible</strong>: cambio de tráfico en ALBs, snapshots y parcheo desatendido de Ubuntu."),
-        T("Taking part in the move of services from EC2 hosts to <strong>EKS</strong> pods, alongside the SRE team.",
-          "Participo en la migración de servicios de hosts EC2 a pods en <strong>EKS</strong>, junto al equipo de SRE."),
-        T("Operate core AWS (EC2, ALB, IAM, VPC, CloudWatch) and a Windows Server domain controller, troubleshoot in <strong>Datadog</strong> and run Tenable scans under <strong>PCI-DSS</strong>.",
-          "Opero servicios core de AWS (EC2, ALB, IAM, VPC, CloudWatch) y un domain controller en Windows Server, analizo fallas en <strong>Datadog</strong> y corro escaneos de Tenable bajo <strong>PCI-DSS</strong>.")
+        T("Part of the infrastructure team behind 50+ repos, one stack per country, with a hand in maintaining the shared <strong>CI/CD</strong> repo and its backend (Bitbucket Pipelines for Python, SageMaker and Terraform).",
+          "Parte del equipo de infraestructura detrás de más de 50 repos, un stack por país, colaborando en el mantenimiento del repo compartido de <strong>CI/CD</strong> y su backend (Bitbucket Pipelines para Python, SageMaker y Terraform)."),
+        T("Terraform <strong>change management</strong> automated as a team: plans and applies logged on the Jira ticket, approvals synced with the pull request, and security and audit checks built in, with no manual steps.",
+          "<strong>Gestión de cambios</strong> de Terraform automatizada en equipo: cada plan y apply queda en el ticket de Jira, las aprobaciones se sincronizan con el pull request y los chequeos de seguridad y auditoría vienen incluidos, sin pasos manuales."),
+        T("Infrastructure and release flow for a real-time <strong>fraud scoring</strong> model on SageMaker, a joint project now heading to production.",
+          "Infraestructura y flujo de release de un modelo de <strong>scoring de fraude</strong> en tiempo real sobre SageMaker, un proyecto conjunto que hoy va camino a producción."),
+        T("Maintenance automated with <strong>Rundeck and Ansible</strong>: ALB traffic shifting, instance snapshots and unattended Ubuntu patching.",
+          "Mantenimiento automatizado con <strong>Rundeck y Ansible</strong>: cambio de tráfico en ALBs, snapshots y parcheo desatendido de Ubuntu."),
+        T("Moving services from EC2 hosts to <strong>EKS</strong> pods together with the SRE team.",
+          "Migración de servicios de hosts EC2 a pods en <strong>EKS</strong>, junto al equipo de SRE."),
+        T("Day-to-day operation of core AWS (EC2, ALB, IAM, VPC, CloudWatch) and a Windows Server domain controller, troubleshooting in <strong>Datadog</strong> and Tenable scans under <strong>PCI-DSS</strong>.",
+          "Operación diaria de AWS core (EC2, ALB, IAM, VPC, CloudWatch) y de un domain controller en Windows Server, análisis de fallas en <strong>Datadog</strong> y escaneos de Tenable bajo <strong>PCI-DSS</strong>.")
       ]
     },
     {
@@ -220,12 +374,12 @@ const CV = {
       when: T("Oct 2022 – Apr 2024", "Oct 2022 – Abr 2024"),
       where: "CABA, Argentina",
       tasks: [
-        T("Answered on-site part replacement calls for <strong>NetApp</strong> systems (disks, motherboards) as a NetApp partner.",
-          "Atendí llamados de reemplazo de partes on-site en equipos <strong>NetApp</strong> (discos, motherboards) como partner de NetApp."),
-        T("Supported the IT infrastructure of small and mid-size clients remotely, on their VPS or on servers through iLO.",
-          "Di soporte de infraestructura IT a clientes chicos y medianos de forma remota, en sus VPS o en servidores vía iLO."),
-        T("Saw client projects through: on-prem to <strong>cloud migrations</strong>, storage mirroring and MetroCluster setups.",
-          "Acompañé proyectos de clientes: <strong>migraciones</strong> de on-prem a cloud, storage mirroring y MetroCluster.")
+        T("On-site part replacement for <strong>NetApp</strong> systems (disks, motherboards) as part of a NetApp partner's field team.",
+          "Reemplazo de partes on-site en equipos <strong>NetApp</strong> (discos, motherboards) dentro del equipo de campo de un partner de NetApp."),
+        T("Remote IT infrastructure support for small and mid-size clients, on their VPS or on servers through iLO.",
+          "Soporte remoto de infraestructura IT a clientes chicos y medianos, en sus VPS o en servidores vía iLO."),
+        T("Follow-up on client projects: on-prem to <strong>cloud migrations</strong>, storage mirroring and MetroCluster.",
+          "Seguimiento de proyectos de clientes: <strong>migraciones</strong> de on-prem a cloud, storage mirroring y MetroCluster.")
       ]
     },
     {
@@ -234,10 +388,10 @@ const CV = {
       when: T("Jan 2021 – Oct 2022", "Ene 2021 – Oct 2022"),
       where: "CABA, Argentina",
       tasks: [
-        T("Managed <strong>VMware</strong> for a pod of about 10 clients: ESXi host and VM lifecycle in vCenter, plus some vSAN.",
-          "Administré <strong>VMware</strong> para un pod de unos 10 clientes: lifecycle de hosts ESXi y VMs en vCenter, más algo de vSAN."),
-        T("Kept VM and datastore backups running in <strong>Veeam B&amp;R</strong>, fixing the causes of warnings and errors.",
-          "Mantuve en marcha los backups de VMs y datastores en <strong>Veeam B&amp;R</strong>, resolviendo las causas de warnings y errores.")
+        T("<strong>VMware</strong> operations for a pod of about 10 clients: ESXi host and VM lifecycle in vCenter, plus some vSAN.",
+          "Operación de <strong>VMware</strong> en un pod de unos 10 clientes: lifecycle de hosts ESXi y VMs en vCenter, más algo de vSAN."),
+        T("VM and datastore backups kept running in <strong>Veeam B&amp;R</strong>, fixing the causes of warnings and errors.",
+          "Backups de VMs y datastores en <strong>Veeam B&amp;R</strong>, resolviendo las causas de warnings y errores.")
       ]
     }
   ],
@@ -284,26 +438,32 @@ const KEYS = {
   "SAN / NAS": "storage|NetApp|datastore", "Veeam B&amp;R": "Veeam"
 };
 const NAME = "Gianfranco Casetta";
-const canMove = !!window.gsap && !matchMedia("(prefers-reduced-motion: reduce)").matches
-  && !matchMedia("print").matches && !/[?&]static/.test(location.search);
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const canMove = !!window.gsap && !reduced && !matchMedia("print").matches && !/[?&]static/.test(location.search);
 const splitName = s => s.split(" ").map(w =>
   `<span class="w" aria-hidden="true">${[...w].map(c => `<span class="c">${c}</span>`).join("")}</span>`).join(" ");
 const gridCanvas = Object.assign(document.createElement("canvas"), { className: "grid" });
 gridCanvas.setAttribute("aria-hidden", "true");
-let tl = null;
+const sheet = document.getElementById("sheet");
+const bar = document.querySelector(".bar");
+let tl = null, fx = null, lang = "en";
 
-/* End of the intro: letters start reacting to the pointer. Before printing the
-   name goes back to plain text so the PDF text stays clean. */
-function settle(flat) {
-  if (tl) { tl.progress(1).kill(); tl = null; }
-  const n = document.querySelector(".name");
-  if (n && n.firstElementChild) {
-    if (flat === true) { n.textContent = NAME; n.classList.remove("live"); } else n.classList.add("live");
-  }
-  if (window.gsap) gsap.set("#sheet *:not(canvas)", { clearProps: "all" });
+const go = id => {
+  const el = id === "top" ? document.body : document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+};
+function setNav(id) {
+  document.querySelectorAll("#nav button").forEach(b => b.setAttribute("aria-current", String(b.dataset.go === id)));
 }
 
-const sheet = document.getElementById("sheet");
+/* End of the intro: letters start reacting to the pointer. */
+function settle() {
+  if (tl) { tl.progress(1).kill(); tl = null; }
+  const n = document.querySelector(".name");
+  if (n && n.firstElementChild) n.classList.add("live");
+  if (window.gsap) gsap.set(".name .c, .role b, .role span, .about, .contact li", { clearProps: "all" });
+}
+
 let pinned = null;
 function trace(tag) {
   sheet.querySelectorAll(".hit, .on").forEach(e => e.classList.remove("hit", "on"));
@@ -318,27 +478,36 @@ function trace(tag) {
 const skillAt = e => e.target.closest && e.target.closest(".tags li[data-k]");
 sheet.addEventListener("pointerover", e => { const s = skillAt(e); if (s && e.pointerType === "mouse") trace(s); });
 sheet.addEventListener("pointerout", e => { if (skillAt(e) && e.pointerType === "mouse") trace(pinned); });
-sheet.addEventListener("click", e => { const s = skillAt(e); pinned = s && s !== pinned ? s : null; trace(pinned); });
+sheet.addEventListener("click", e => {
+  const s = skillAt(e);
+  if (s || pinned) { pinned = s && s !== pinned ? s : null; trace(pinned); }
+  const g = e.target.closest && e.target.closest("[data-go]");
+  if (g) go(g.dataset.go);
+});
 sheet.addEventListener("keydown", e => {
   const s = skillAt(e);
   if (s && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pinned = s !== pinned ? s : null; trace(pinned); }
 });
+bar.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (g) go(g.dataset.go); });
+document.getElementById("who").dataset.go = "top";
 document.addEventListener("pointermove", e => {
   const n = e.pointerType === "mouse" && document.querySelector(".name.live");
   if (!n) return;
+  const R = n.firstElementChild.offsetHeight * 1.4;
   n.querySelectorAll(".c").forEach(c => {
     const r = c.getBoundingClientRect();
     const d = Math.hypot(e.clientX - r.left - r.width / 2, e.clientY - r.top - r.height / 2);
-    c.style.setProperty("--k", Math.max(0, 1 - d / 120).toFixed(3));
+    c.style.setProperty("--k", Math.max(0, 1 - d / R).toFixed(3));
   });
 });
 
 function intro() {
   const focus = document.querySelector(".role span");
-  gridCanvas.ping(40, 56);
+  const nr = document.querySelector(".name").getBoundingClientRect(), cr = gridCanvas.getBoundingClientRect();
+  gridCanvas.ping(nr.left - cr.left + 40, nr.top - cr.top + nr.height / 2);
   tl = gsap.timeline({ defaults: { ease: "power3.out", duration: .6 }, onComplete: settle });
-  tl.from(".name .c", { yPercent: 120, duration: .8, stagger: .024, ease: "power4.out" })
-    .from(".role b", { autoAlpha: 0, x: -14 }, "-=.5");
+  tl.from(".name .c", { yPercent: 120, duration: .9, stagger: .025, ease: "power4.out" })
+    .from(".role b", { autoAlpha: 0, x: -16 }, "-=.55");
   if (window.ScrambleTextPlugin) {
     gsap.registerPlugin(ScrambleTextPlugin);
     tl.from(focus, { autoAlpha: 0, duration: .2 }, "<")
@@ -346,24 +515,58 @@ function intro() {
   } else {
     tl.from(focus, { autoAlpha: 0 }, "<");
   }
-  tl.from(".about, .contact li", { autoAlpha: 0, y: 10, stagger: .07 }, "-=.9")
-    .from("h2", { autoAlpha: 0, y: 8, stagger: .06 }, "-=.35")
-    .from(".jobs", { "--rail": 0, duration: 1.2, ease: "power2.inOut" }, "<")
-    .from(".job", { "--dot": 0, duration: .45, stagger: .3, ease: "back.out(3)" }, "<+.05")
-    .from(".job > *, .main .list li, .langs li", { autoAlpha: 0, x: -10, stagger: .04, duration: .45 }, "<")
-    .from(".side .group h3, .side .list li", { autoAlpha: 0, y: 8, stagger: .05, duration: .45 }, "<+.1")
-    .from(".tags li", { autoAlpha: 0, scale: .7, duration: .3, stagger: { each: .014, from: "random" } }, "<");
+  tl.from(".about, .contact li", { autoAlpha: 0, y: 14, stagger: .07 }, "-=.9");
 }
 
-function render(lang, mode) {
+/* Scroll story: progress line, hero drifts away, each section reveals as it arrives. */
+function scrollFx() {
+  if (!window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  const once = (trigger, start = "top 85%") => ({ trigger, start, once: true });
+  const rise = { autoAlpha: 0, y: 24, duration: .7, ease: "power3.out", clearProps: "opacity,visibility,transform" };
+
+  gsap.to(".progress", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: .3 } });
+  gsap.to(".hero-in", { yPercent: -10, autoAlpha: .15, ease: "none", scrollTrigger: { trigger: ".head", start: "top top", end: "bottom top", scrub: true } });
+  gsap.to(".cue", { autoAlpha: 0, ease: "none", scrollTrigger: { trigger: ".head", start: "top top", end: "12% top", scrub: true } });
+  ScrollTrigger.create({ trigger: ".head", start: "bottom top+=90", end: "max", onToggle: s => bar.classList.toggle("past", s.isActive) });
+
+  sheet.querySelectorAll("section").forEach(sec =>
+    gsap.from(sec.querySelectorAll(".sec-head > *"), { ...rise, stagger: .08, scrollTrigger: once(sec) }));
+
+  const jobs = sheet.querySelector(".jobs");
+  gsap.fromTo(jobs, { "--rail": 0 }, { "--rail": 1, ease: "none", scrollTrigger: { trigger: jobs, start: "top 70%", end: "bottom 75%", scrub: .6 } });
+  gsap.utils.toArray(".job").forEach(job => {
+    gsap.timeline({ scrollTrigger: once(job, "top 80%") })
+      .from(job, { "--dot": 0, duration: .5, ease: "back.out(3)" })
+      .from(job.querySelectorAll("h3, .meta"), { ...rise, x: -24, y: 0, stagger: .08 }, "<")
+      .from(job.querySelectorAll(".tasks li"), { ...rise, y: 18, duration: .55, stagger: .07 }, "-=.35");
+  });
+  gsap.utils.toArray(".group").forEach(g => {
+    gsap.timeline({ scrollTrigger: once(g, "top 88%") })
+      .from(g.querySelector("h3"), { ...rise, y: 12, duration: .45 })
+      .from(g.querySelectorAll(".tags li"), { ...rise, y: 10, scale: .7, duration: .4, ease: "back.out(2.2)", stagger: { each: .035, from: "random" } }, "<+.1");
+  });
+  ["#certs", "#edu", "#langs"].forEach(id => gsap.from(`${id} li`, { ...rise, y: 18, stagger: .09, scrollTrigger: once(id) }));
+  gsap.from(".foot-in > *", { ...rise, y: 30, stagger: .1, scrollTrigger: once(".foot", "top 80%") });
+
+  CV.nav.forEach(([id], i) => ScrollTrigger.create({
+    trigger: "#" + id, start: "top 55%", end: i === CV.nav.length - 1 ? "max" : "bottom 55%",
+    onEnter: () => setNav(id), onEnterBack: () => setNav(id), onLeaveBack: () => { if (i === 0) setNav(null); }
+  }));
+  if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+}
+
+function render(next, mode) {
+  lang = next;
   const animate = canMove && mode === "intro";
-  if (tl) { tl.kill(); tl = null; }
+  if (fx) { fx.revert(); fx = null; }
+  tl = null;
   pinned = null; sheet.classList.remove("tracing");
+  const t = v => (v && typeof v === "object" && "en" in v) ? v[lang] : v;
   const tag = x => {
     const k = KEYS[typeof x === "string" ? x : x.en];
     return `<li${k ? ` data-k="${k}" tabindex="0" role="button"` : ""}>${t(x)}</li>`;
   };
-  const t = v => (v && typeof v === "object" && "en" in v) ? v[lang] : v;
   const job = j => `
     <li class="job${j.now ? " now" : ""}">
       <h3>${t(j.title)}</h3>
@@ -371,84 +574,98 @@ function render(lang, mode) {
       <ul class="tasks">${j.tasks.map(x => `<li>${t(x)}</li>`).join("")}</ul>
     </li>`;
   document.documentElement.lang = lang;
-  document.getElementById("sheet").innerHTML = `
+  document.getElementById("nav").innerHTML = CV.nav.map(([id, label]) =>
+    `<button type="button" data-go="${id}" aria-current="false">${t(label)}</button>`).join("");
+  sheet.innerHTML = `
     <header class="head">
-      <h1 class="name${canMove && !animate ? " live" : ""}" aria-label="${NAME}">${canMove ? splitName(NAME) : NAME}</h1>
-      <p class="role"><b>${CV.role}</b><span>${t(CV.focus)}</span></p>
-      <p class="about">${t(CV.about)}</p>
-      <ul class="contact">
-        <li>${ICON.mail}<a href="mailto:casettagian@gmail.com">casettagian@gmail.com</a></li>
-        <li>${ICON.link}<a href="https://www.linkedin.com/in/kzgian" target="_blank" rel="noopener">linkedin.com/in/kzgian</a></li>
-        <li>${ICON.pin}${t(CV.place)}</li>
-      </ul>
+      <div class="hero-in">
+        <h1 class="name${canMove && !animate ? " live" : ""}" aria-label="${NAME}">${canMove ? splitName(NAME) : NAME}</h1>
+        <p class="role"><b>${CV.role}</b><span>${t(CV.focus)}</span></p>
+        <p class="about">${t(CV.about)}</p>
+        <ul class="contact">
+          <li>${ICON.mail}<a href="mailto:casettagian@gmail.com">casettagian@gmail.com</a></li>
+          <li>${ICON.link}<a href="https://www.linkedin.com/in/kzgian" target="_blank" rel="noopener">linkedin.com/in/kzgian</a></li>
+          <li>${ICON.pin}${t(CV.place)}</li>
+        </ul>
+      </div>
+      <button type="button" class="cue" data-go="work">${t(CV.cue)}<i></i></button>
     </header>
     <div class="cols">
       <div class="main">
-        <section>
-          <h2>${t(CV.h.work)}</h2>
+        <section id="work">
+          <div class="sec-head"><h2>${t(CV.h.work)}</h2><p class="sub">${t(CV.span)}</p></div>
           <ul class="jobs">${CV.jobs.map(job).join("")}</ul>
         </section>
-        <section>
-          <h2>${t(CV.h.edu)}</h2>
+        <section id="edu">
+          <div class="sec-head"><h2>${t(CV.h.edu)}</h2></div>
           <ul class="list"><li><b>${t(CV.edu.name)}</b><span>${t(CV.edu.by)}</span></li></ul>
         </section>
       </div>
       <aside class="side">
-        <section class="skills">
-          <h2>${t(CV.h.skills)}</h2>
-          <p class="hint">${t(CV.hint)}</p>
-          ${CV.skills.map(g => `<div class="group"><h3>${t(g.name)}</h3><ul class="tags">${g.tags.map(tag).join("")}</ul></div>`).join("")}
+        <section id="skills" class="skills">
+          <div class="sec-head"><h2>${t(CV.h.skills)}</h2><p class="hint">${t(CV.hint)}</p></div>
+          <div class="groups">${CV.skills.map(g => `<div class="group"><h3>${t(g.name)}</h3><ul class="tags">${g.tags.map(tag).join("")}</ul></div>`).join("")}</div>
         </section>
-        <section>
-          <h2>${t(CV.h.certs)}</h2>
+        <section id="certs">
+          <div class="sec-head"><h2>${t(CV.h.certs)}</h2></div>
           <ul class="list">${CV.certs.map(c => `<li><b>${c.name}</b><span>${t(c.by)}</span></li>`).join("")}</ul>
         </section>
-        <section>
-          <h2>${t(CV.h.langs)}</h2>
+        <section id="langs">
+          <div class="sec-head"><h2>${t(CV.h.langs)}</h2></div>
           <ul class="langs">${CV.langs.map(l => `<li><b>${t(l.name)}</b><span>${t(l.level)}</span></li>`).join("")}</ul>
         </section>
       </aside>
-    </div>`;
+    </div>
+    <footer class="foot">
+      <div class="foot-in">
+        <p class="foot-line">${t(CV.foot.line)}</p>
+        <a class="foot-mail" href="mailto:casettagian@gmail.com">casettagian@gmail.com</a>
+        <div class="foot-links">
+          <a href="https://www.linkedin.com/in/kzgian" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="pdf" data-pdf href="Gianfranco-Casetta-CV-EN.pdf" target="_blank" rel="noopener" hidden>PDF</a>
+          <button type="button" data-go="top">${t(CV.foot.top)}</button>
+        </div>
+      </div>
+    </footer>`;
   document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
-  document.getElementById("pdf").href = `Gianfranco-Casetta-CV-${lang.toUpperCase()}.pdf`;
-  document.querySelector(".head").prepend(gridCanvas);
-  if (animate) intro();
-  else if (canMove && mode === "swap") {
-    gsap.from(".role span, .about, .job, .main section + section, .side section",
-      { autoAlpha: 0, y: 6, duration: .35, stagger: .04, ease: "power2.out", clearProps: "all" });
-  }
+  document.querySelectorAll("[data-pdf]").forEach(a => { a.href = `Gianfranco-Casetta-CV-${lang.toUpperCase()}.pdf`; });
+  if (!document.querySelector(".bar .pdf").hidden) document.querySelectorAll(".foot .pdf").forEach(a => { a.hidden = false; });
+  sheet.querySelector(".head").prepend(gridCanvas);
+  if (canMove) fx = gsap.context(() => { if (animate) intro(); scrollFx(); });
 }
 
-/* Header grid: dots light up near the pointer and a few packets travel the rows. */
+/* Header grid: dots light up near the pointer, a few packets travel the rows, clicks send a ripple. */
 (function liveGrid() {
   const ctx = gridCanvas.getContext("2d");
   const STEP = 18, OFF = 13, amber = getComputedStyle(document.documentElement).getPropertyValue("--amber").trim() || "#f4ab3c";
-  let w = 0, h = 0, cw = 0, px = -999, py = -999, last = 0;
+  let w = 0, h = 0, cw = 0, ch = 0, px = -999, py = -999, last = 0;
   const ripples = [];
   gridCanvas.ping = (x, y) => ripples.push({ x, y, t: performance.now() });
-  const packets = [0, 1, 2, 3].map(() => ({ x: 0, y: 0, v: 0, wait: Math.random() * 3 }));
+  const packets = [0, 1, 2, 3, 4, 5].map(() => ({ x: 0, y: 0, v: 0, wait: Math.random() * 3 }));
   const spawn = p => {
     p.y = OFF + STEP * Math.floor(Math.random() * Math.max(1, Math.floor((h - OFF) / STEP)));
-    p.v = (60 + Math.random() * 70) * (Math.random() < .5 ? 1 : -1);
+    p.v = (70 + Math.random() * 90) * (Math.random() < .5 ? 1 : -1);
     p.x = p.v > 0 ? -40 : w + 40;
     p.wait = 0;
   };
   function size() {
     const r = gridCanvas.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
     if (!r.width) return;
-    w = r.width; h = r.height; cw = gridCanvas.clientWidth;
+    w = r.width; h = r.height; cw = gridCanvas.clientWidth; ch = gridCanvas.clientHeight;
     gridCanvas.width = Math.round(w * d); gridCanvas.height = Math.round(h * d);
     ctx.setTransform(d, 0, 0, d, 0, 0);
   }
   function frame(now) {
     const dt = Math.min(.05, (now - last) / 1000 || 0); last = now;
-    if (gridCanvas.isConnected && gridCanvas.clientWidth !== cw) size();
+    if (gridCanvas.isConnected && (gridCanvas.clientWidth !== cw || gridCanvas.clientHeight !== ch)) size();
+    const r = gridCanvas.getBoundingClientRect();
+    if (r.bottom < 0) { requestAnimationFrame(frame); return; } /* off screen: skip drawing */
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = amber;
     for (let i = ripples.length - 1; i >= 0; i--) {
       const rp = ripples[i], age = (now - rp.t) / 1000;
       if (age > 1.8) { ripples.splice(i, 1); continue; }
-      const rad = age * 420, fade = 1 - age / 1.8;
+      const rad = age * 520, fade = 1 - age / 1.8;
       for (let x = OFF; x < w; x += STEP) for (let y = OFF; y < h; y += STEP) {
         const d = Math.abs(Math.hypot(x - rp.x, y - rp.y) - rad);
         if (d > 28) continue;
@@ -457,7 +674,7 @@ function render(lang, mode) {
         ctx.beginPath(); ctx.arc(x, y, 1 + k * 1.3, 0, 6.2832); ctx.fill();
       }
     }
-    const R = 120;
+    const R = 130;
     if (px > -R && px < w + R && py > -R && py < h + R) {
       const x0 = Math.max(0, Math.floor((px - R - OFF) / STEP)), x1 = Math.ceil((px + R - OFF) / STEP);
       const y0 = Math.max(0, Math.floor((py - R - OFF) / STEP)), y1 = Math.ceil((py + R - OFF) / STEP);
@@ -491,16 +708,23 @@ function render(lang, mode) {
     if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom)
       gridCanvas.ping(e.clientX - r.left, e.clientY - r.top);
   });
-  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) requestAnimationFrame(frame);
+  if (!reduced) requestAnimationFrame(frame);
 })();
-window.addEventListener("beforeprint", () => { pinned = null; trace(null); settle(true); });
+
+/* Printing from the browser: drop the motion layer and use plain text for the name. */
+window.addEventListener("beforeprint", () => {
+  if (fx) { fx.revert(); fx = null; }
+  pinned = null; trace(null);
+  const n = document.querySelector(".name");
+  if (n) { n.textContent = NAME; n.classList.remove("live"); }
+});
+window.addEventListener("afterprint", () => render(lang, "swap"));
 
 const fromHash = () => (location.hash === "#es" ? "es" : "en");
 document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => {
-  const lang = b.dataset.lang;
-  try { history.replaceState(null, "", "#" + lang); } catch (e) { location.hash = lang; }
-  render(lang, "swap");
+  try { history.replaceState(null, "", "#" + b.dataset.lang); } catch (e) { /* hash is optional */ }
+  render(b.dataset.lang, "swap");
 }));
-window.addEventListener("hashchange", () => render(fromHash(), "swap"));
+window.addEventListener("hashchange", () => { if (/^#(en|es)$/.test(location.hash)) render(fromHash(), "swap"); });
 render(fromHash(), "intro");
 </script>
