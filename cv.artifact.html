@@ -5,22 +5,28 @@
 /* Two layouts from one document.
    Print (base rules): one A4 sheet, name header over a career timeline beside a reference column.
    Screen (@media screen): a scrolling site that scales with the monitor. Full-height hero on the
-   live grid, then sections with a sticky heading on the left and content on the right, revealed
-   as they scroll in. */
+   live grid, then experience beside a sticky skills panel, revealed as they scroll in, with
+   smooth wheel scrolling that settles on section starts. */
 :root {
   color-scheme: dark;
+  /* Palette: main ground (ink, sheet, raise, line), secondary text (paper, mist), accent */
   --ink: #0e1b2c;        /* page ground, deep ink blue */
   --sheet: #13243a;      /* raised surface */
   --raise: #1a3049;      /* chips */
   --line: #2b4563;       /* rules and borders */
   --paper: #efe8d8;      /* primary text, warm ivory */
   --mist: #a9b9cb;       /* secondary text */
-  --amber: #f4ab3c;      /* accent */
-  --amber-soft: #f4ab3c24;
+  --accent: #f4ab3c;     /* accent */
+  --accent-soft: color-mix(in srgb, var(--accent) 15%, transparent);
   --display: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", sans-serif;
   --body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
 }
+/* Alternative palettes, all dark and cool, picked from the bar */
+:root[data-palette="violet"] { --ink: #120f22; --sheet: #19152e; --raise: #221d3d; --line: #352d59; --paper: #eeebf7; --mist: #aba4c8; --accent: #6ee7c8; }
+:root[data-palette="forest"] { --ink: #0b1714; --sheet: #10201c; --raise: #172b26; --line: #24423a; --paper: #e7efe9; --mist: #9db5ab; --accent: #b8a4ff; }
+:root[data-palette="slate"]  { --ink: #0d141c; --sheet: #121c27; --raise: #192634; --line: #283a4e; --paper: #e7edf3; --mist: #9aaec2; --accent: #56c8f0; }
+:root[data-palette="petrol"] { --ink: #0a1a1f; --sheet: #0f242a; --raise: #163037; --line: #22464f; --paper: #e9f0ef; --mist: #9cb7b6; --accent: #ff8a73; }
 * { box-sizing: border-box; }
 body {
   background: var(--ink);
@@ -33,15 +39,16 @@ body {
   print-color-adjust: exact;
 }
 a { color: inherit; text-decoration: none; }
-a:hover { color: var(--amber); }
-:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 3px; }
+a:hover { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
 ul { margin: 0; padding: 0; list-style: none; }
 h1, h2, h3, p { margin: 0; }
 button { font: inherit; }
 
 /* Screen-only pieces are hidden in the base (print) layout */
 .progress, .who, .nav, .cue, .sub, .foot { display: none; }
-.hero-in, .sec-head, .groups { display: contents; }
+.hero-in, .sec-head, .groups, .skills-rail { display: contents; }
+.match, .swatches { display: none; }
 
 .bar {
   width: 100%; max-width: 210mm; margin: 0 auto 12px;
@@ -51,7 +58,7 @@ button { font: inherit; }
 .acts { display: flex; align-items: center; gap: 10px; }
 .lang { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
 .lang button { color: var(--mist); background: transparent; border: 0; padding: 6px 12px; cursor: pointer; }
-.lang button[aria-pressed="true"] { background: var(--amber); color: var(--ink); }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--ink); }
 .pdf:not([hidden]) { display: inline-block; border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; color: var(--paper); }
 
 .sheet {
@@ -78,22 +85,22 @@ button { font: inherit; }
 .name.live .c {
   transition: transform .35s cubic-bezier(.2, .8, .2, 1), color .35s;
   transform: translateY(calc(var(--k, 0) * -0.08em));
-  color: color-mix(in srgb, var(--amber) calc(var(--k, 0) * 100%), var(--paper));
+  color: color-mix(in srgb, var(--accent) calc(var(--k, 0) * 100%), var(--paper));
 }
 .role { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
-.role b { font: 700 19px/1.2 var(--display); color: var(--amber); }
+.role b { font: 700 19px/1.2 var(--display); color: var(--accent); }
 .role span { font: 500 12px var(--mono); color: var(--mist); }
 .about { max-width: 78ch; font-size: 13px; color: var(--paper); }
 .contact { display: flex; flex-wrap: wrap; gap: 6px 22px; font: 400 11.5px var(--mono); color: var(--mist); }
 .contact li { display: flex; gap: 7px; align-items: center; }
-.contact svg { width: 13px; height: 13px; flex: none; stroke: var(--amber); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.contact svg { width: 13px; height: 13px; flex: none; stroke: var(--accent); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .contact a { color: var(--paper); }
 
 /* Body grid */
 .cols { flex: 1; display: grid; grid-template-columns: minmax(0, 1.72fr) minmax(0, 1fr); }
 .main { padding: 14px 28px 12px 40px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .side { padding: 14px 34px 12px 26px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 18px; min-width: 0; }
-h2 { font: 700 17px/1.2 var(--display); color: var(--amber); padding-bottom: 7px; border-bottom: 1px solid var(--line); }
+h2 { font: 700 17px/1.2 var(--display); color: var(--accent); padding-bottom: 7px; border-bottom: 1px solid var(--line); }
 section { display: flex; flex-direction: column; gap: 12px; }
 .cols section { position: relative; } /* keeps exported PDF text in reading order */
 
@@ -108,8 +115,8 @@ section { display: flex; flex-direction: column; gap: 12px; }
   content: ""; position: absolute; left: calc(var(--d) / -2 + .5px); top: 5px; width: var(--d); height: var(--d); border-radius: 50%;
 }
 .job::before { background: var(--sheet); border: 1.5px solid var(--mist); transform: scale(var(--dot)); z-index: 1; }
-.job.now::before { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 4px var(--amber-soft); }
-.job.now::after { border: 1px solid var(--amber); animation: ping 2.4s ease-out infinite; }
+.job.now::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.job.now::after { border: 1px solid var(--accent); animation: ping 2.4s ease-out infinite; }
 @keyframes ping { 0% { transform: scale(1); opacity: .8; } 70%, 100% { transform: scale(3.2); opacity: 0; } }
 .job h3 { font: 700 15px/1.25 var(--display); }
 .meta { display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: baseline; }
@@ -117,7 +124,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
 .meta span { font: 400 11px var(--mono); color: var(--mist); }
 .tasks { display: flex; flex-direction: column; gap: 4px; }
 .tasks li { position: relative; padding-left: 14px; transition: opacity .25s; }
-.tasks li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 6px; height: 1.5px; background: var(--amber); transition: width .25s, left .25s; }
+.tasks li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 6px; height: 1.5px; background: var(--accent); transition: width .25s, left .25s; }
 /* Skill tracing: picking a skill lights up the work where it was used */
 .sheet.tracing .tasks li { opacity: .3; }
 .sheet.tracing .tasks li.hit { opacity: 1; }
@@ -129,9 +136,9 @@ section { display: flex; flex-direction: column; gap: 12px; }
 .group h3 { font: 600 12px var(--body); color: var(--paper); }
 .tags { display: flex; flex-wrap: wrap; gap: 5px; }
 .tags li { font: 400 10.5px/1.2 var(--mono); color: var(--paper); background: var(--raise); border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; transition: border-color .2s, color .2s, background .2s; }
-.tags li:hover { border-color: var(--amber); color: var(--amber); }
+.tags li:hover { border-color: var(--accent); color: var(--accent); }
 .tags li[data-k] { cursor: pointer; }
-.tags li.on { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+.tags li.on { background: var(--accent); border-color: var(--accent); color: var(--ink); }
 .hint { font: 400 10px/1.3 var(--mono); color: var(--mist); margin-top: -4px; }
 .skills { gap: 13px; }
 .list { display: flex; flex-direction: column; gap: 10px; }
@@ -140,7 +147,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
 .langs { display: flex; flex-direction: column; gap: 5px; }
 .langs li { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .langs b { font-weight: 600; }
-.langs span { font: 400 10.5px var(--mono); color: var(--amber); text-align: right; }
+.langs span { font: 400 10.5px var(--mono); color: var(--accent); text-align: right; }
 
 /* ---------- Screen: a site that scales with the monitor ---------- */
 @media screen {
@@ -159,7 +166,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
   /* Fixed top bar */
   .progress {
     display: block; position: fixed; left: 0; right: 0; top: env(safe-area-inset-top, 0px); height: 2px; z-index: 21;
-    background: var(--amber); transform-origin: left; transform: scaleX(0);
+    background: var(--accent); transform-origin: left; transform: scaleX(0);
   }
   .bar {
     position: fixed; inset: 0 0 auto; z-index: 20; max-width: none; margin: 0;
@@ -179,11 +186,25 @@ section { display: flex; flex-direction: column; gap: 12px; }
   .nav { display: flex; gap: .25rem; }
   .nav button { color: var(--mist); background: none; border: 0; padding: .45rem .9rem; border-radius: 99px; cursor: pointer; transition: color .2s, background-color .2s; }
   .nav button:hover { color: var(--paper); }
-  .nav button[aria-current="true"] { background: var(--amber); color: var(--ink); }
+  .nav button[aria-current="true"] { background: var(--accent); color: var(--ink); }
   .acts { justify-self: end; gap: .6rem; }
   .lang button, .pdf:not([hidden]) { padding: .45rem .85rem; }
   .lang, .pdf:not([hidden]) { border-radius: 99px; }
-  .pdf:not([hidden]):hover { border-color: var(--amber); }
+  .pdf:not([hidden]):hover { border-color: var(--accent); }
+  .swatches { display: flex; gap: .35rem; padding: 0 .3rem; }
+  .swatches button {
+    width: 1.35rem; height: 1.35rem; border-radius: 50%; padding: 0; cursor: pointer;
+    border: 2px solid transparent; outline: 1px solid var(--line); outline-offset: 1px;
+    background: linear-gradient(135deg, var(--sw-bg) 50%, var(--sw-ac) 50%);
+    transition: transform .2s;
+  }
+  .swatches button:hover { transform: scale(1.12); }
+  .swatches button[aria-pressed="true"] { outline: 2px solid var(--accent); }
+
+  /* Lenis smooth scrolling */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
 
   /* Sheet becomes the page */
   .sheet { max-width: none; min-height: 0; margin: 0; border: 0; background: transparent; display: block; }
@@ -207,11 +228,11 @@ section { display: flex; flex-direction: column; gap: 12px; }
     flex-direction: column; align-items: center; gap: .6rem;
     font: 500 .75rem var(--mono); color: var(--mist); background: none; border: 0; cursor: pointer;
   }
-  .cue:hover { color: var(--amber); }
-  .cue i { display: block; width: 1px; height: 2.8rem; background: linear-gradient(var(--amber), transparent); transform-origin: top; animation: drip 2.4s ease-in-out infinite; }
+  .cue:hover { color: var(--accent); }
+  .cue i { display: block; width: 1px; height: 2.8rem; background: linear-gradient(var(--accent), transparent); transform-origin: top; animation: drip 2.4s ease-in-out infinite; }
   @keyframes drip { 0% { transform: scaleY(0); opacity: 1; } 55% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
 
-  /* Sections: sticky heading on the left, content on the right */
+  /* Experience on the left, skills panel sticky on the right, then a row of three */
   .cols {
     display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: clamp(5rem, 9vw, 10rem) clamp(1.5rem, 3vw, 3.5rem);
@@ -221,12 +242,16 @@ section { display: flex; flex-direction: column; gap: 12px; }
   section { gap: 1.6rem; scroll-margin-top: 6rem; }
   .sec-head { display: flex; flex-direction: column; gap: .9rem; }
   h2 { font-size: clamp(1.8rem, 2.7vw, 3.3rem); line-height: 1.05; letter-spacing: -.015em; padding: 0; border: 0; text-wrap: balance; }
-  .sub, .hint { display: block; margin: 0; font: 400 .85rem/1.5 var(--mono); color: var(--mist); max-width: 26ch; }
-  #work { order: 1; } #skills { order: 2; } #certs { order: 3; } #edu { order: 4; } #langs { order: 5; }
-  #work, #skills { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: start; }
-  #work > .sec-head, #skills > .sec-head { grid-column: 1 / span 3; position: sticky; top: 6.5rem; }
-  #work > .jobs, #skills > .groups { grid-column: 4 / -1; }
+  .sub, .hint, .match { display: block; margin: 0; font: 400 .85rem/1.5 var(--mono); color: var(--mist); }
+  .match { color: var(--accent); min-height: 1.5em; }
+  #work { order: 1; grid-column: 1 / span 8; gap: 2.4rem; }
+  .skills-rail { display: block; order: 2; grid-column: 9 / -1; align-self: stretch; }
+  #skills { position: sticky; top: 5.5rem; gap: 1.6rem; padding: 1.6rem; background: var(--sheet); border: 1px solid var(--line); border-radius: .9rem; }
+  #skills h2 { font-size: clamp(1.4rem, 1.9vw, 2.2rem); }
+  #certs { order: 3; } #edu { order: 4; } #langs { order: 5; }
   #certs, #edu, #langs { grid-column: span 4; }
+  .sheet.tracing .job:not(.has-hit) :is(h3, .meta) { opacity: .35; }
+  .job h3, .meta { transition: opacity .25s; }
   #certs h2, #edu h2, #langs h2 { font-size: clamp(1.35rem, 1.7vw, 2rem); padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
 
   /* Timeline */
@@ -243,11 +268,11 @@ section { display: flex; flex-direction: column; gap: 12px; }
   .sheet.tracing .tasks li.hit::before { width: .9rem; left: -.35rem; }
 
   /* Skills and the rest */
-  .groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 2.6rem; }
-  .group { gap: .85rem; }
-  .group h3 { font-size: 1.02rem; }
-  .tags { gap: .45rem; }
-  .tags li { font-size: .82rem; padding: .42rem .7rem; border-radius: .4rem; }
+  .groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11.5rem), 1fr)); gap: 1.4rem 1.6rem; }
+  .group { gap: .6rem; }
+  .group h3 { font-size: .95rem; }
+  .tags { gap: .4rem; }
+  .tags li { font-size: .78rem; padding: .36rem .62rem; border-radius: .4rem; }
   .list { gap: 1.3rem; }
   .list b { font-size: 1.05rem; }
   .list span { font-size: .85rem; margin-top: .3rem; }
@@ -265,20 +290,21 @@ section { display: flex; flex-direction: column; gap: 12px; }
     align-self: flex-start; font: 800 clamp(1.9rem, 5.6vw, 7rem)/1 var(--display); letter-spacing: -.03em;
     color: var(--paper); overflow-wrap: anywhere; transition: color .25s;
   }
-  .foot-mail:hover { color: var(--amber); }
+  .foot-mail:hover { color: var(--accent); }
   .foot-links { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.2rem; font: 500 .85rem var(--mono); }
   .foot-links a, .foot-links button { border: 1px solid var(--line); border-radius: 99px; padding: .55rem 1.05rem; color: var(--paper); background: none; cursor: pointer; transition: border-color .2s, color .2s; }
-  .foot-links a:hover, .foot-links button:hover { border-color: var(--amber); color: var(--amber); }
+  .foot-links a:hover, .foot-links button:hover { border-color: var(--accent); color: var(--accent); }
 }
 
 @media screen and (max-width: 960px) {
   .bar { grid-template-columns: 1fr auto; }
   .nav { display: none; }
   .cols { grid-template-columns: minmax(0, 1fr); row-gap: 5rem; }
-  #work, #skills, #certs, #edu, #langs { grid-column: 1 / -1; display: flex; flex-direction: column; }
-  #work > .sec-head, #skills > .sec-head { position: static; }
-  .sub, .hint { max-width: none; }
+  #work, .skills-rail, #certs, #edu, #langs { grid-column: 1 / -1; }
+  #skills { position: static; padding: 0; background: none; border: 0; }
+  .swatches { display: none; }
 }
+@media screen and (max-height: 760px) { #skills { position: static; } }
 @media screen and (max-width: 520px) {
   .who { display: none; }
   .bar { grid-template-columns: 1fr; }
@@ -305,6 +331,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
   <button type="button" class="who" id="who" tabindex="-1">Gianfranco Casetta</button>
   <nav class="nav" id="nav" aria-label="Sections"></nav>
   <div class="acts">
+    <div class="swatches" id="swatches" role="group" aria-label="Color palette"></div>
     <a class="pdf" data-pdf href="Gianfranco-Casetta-CV-EN.pdf" target="_blank" rel="noopener" hidden>PDF</a>
     <div class="lang" role="group" aria-label="Language">
       <button type="button" id="btn-en" data-lang="en" aria-pressed="true">EN</button>
@@ -317,6 +344,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrambleTextPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
 <script>
 const T = (en, es) => ({ en, es });
 const CV = {
@@ -339,8 +367,19 @@ const CV = {
   },
   nav: [
     ["work", T("Experience", "Experiencia")],
-    ["skills", T("Skills", "Skills")],
-    ["certs", T("Background", "Formación")]
+    ["certs", T("Background", "Formación")],
+    ["contact", T("Contact", "Contacto")]
+  ],
+  match: T(
+    (n, off) => `${n} ${n === 1 ? "task" : "tasks"} in experience${off ? `, ${off} out of view (click to go)` : ""}`,
+    (n, off) => `${n} ${n === 1 ? "tarea" : "tareas"} en experiencia${off ? `, ${off} fuera de vista (clic para ir)` : ""}`
+  ),
+  palettes: [
+    ["", T("Ink and amber", "Tinta y ámbar"), "#0e1b2c", "#f4ab3c"],
+    ["violet", T("Violet and mint", "Violeta y menta"), "#120f22", "#6ee7c8"],
+    ["forest", T("Forest and lilac", "Bosque y lila"), "#0b1714", "#b8a4ff"],
+    ["slate", T("Slate and cyan", "Pizarra y cian"), "#0d141c", "#56c8f0"],
+    ["petrol", T("Petrol and coral", "Petróleo y coral"), "#0a1a1f", "#ff8a73"]
   ],
   foot: {
     line: T("Thanks for reading. Email is the quickest way to reach me.", "Gracias por leer. El mail es la forma más rápida de contactarme."),
@@ -448,10 +487,66 @@ const sheet = document.getElementById("sheet");
 const bar = document.querySelector(".bar");
 let tl = null, fx = null, lang = "en";
 
-const go = id => {
-  const el = id === "top" ? document.body : document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+/* Smooth wheel scrolling (Lenis) that settles on section starts after the wheel stops. */
+let lenis = null, snapping = false, lastInput = "", lastDir = 1, snapTimer = 0;
+const barH = () => bar.getBoundingClientRect().height + 16;
+const yOf = el => el.getBoundingClientRect().top + window.scrollY;
+function scrollToY(y, duration = 1.1) {
+  if (lenis) lenis.scrollTo(y, { duration, easing: t => 1 - Math.pow(1 - t, 4) });
+  else window.scrollTo({ top: y, behavior: reduced ? "auto" : "smooth" });
+}
+const go = (id, center) => {
+  if (id === "top") return scrollToY(0);
+  const el = typeof id === "string" ? document.getElementById(id) : id;
+  if (el) scrollToY(Math.max(0, yOf(el) - (center ? innerHeight * .35 : barH())));
 };
+function snapPoints() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  return [0, ...["work", "certs", "contact"].map(id => {
+    const el = document.getElementById(id);
+    return el ? Math.min(max, Math.max(0, yOf(el) - barH())) : null;
+  }).filter(v => v !== null)];
+}
+function snap() {
+  if (!lenis || snapping || lastInput !== "wheel" || innerWidth < 960) return;
+  const pts = snapPoints(), y = window.scrollY, work = pts[1];
+  let target = null;
+  if (y > 2 && y < work - 2) target = lastDir > 0 ? work : 0;      /* the hero behaves like one page */
+  else {
+    const range = innerHeight * .3;
+    const near = pts.filter(p => lastDir > 0 ? p > y && p - y < range : p < y && y - p < range);
+    if (near.length) target = lastDir > 0 ? Math.min(...near) : Math.max(...near);
+  }
+  if (target === null || Math.abs(target - y) < 3) return;
+  snapping = true;
+  lenis.scrollTo(target, { duration: .9, easing: t => 1 - Math.pow(1 - t, 3), onComplete: () => { snapping = false; } });
+}
+function setupLenis() {
+  if (lenis || !canMove || !window.Lenis) return;
+  lenis = new Lenis({ lerp: .09, wheelMultiplier: .9, smoothWheel: true });
+  lenis.on("scroll", () => {
+    if (window.ScrollTrigger) ScrollTrigger.update();
+    if (!snapping) { clearTimeout(snapTimer); snapTimer = setTimeout(snap, 140); }
+  });
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+  addEventListener("wheel", e => { lastInput = "wheel"; if (e.deltaY) lastDir = Math.sign(e.deltaY); snapping = false; }, { passive: true });
+  ["keydown", "touchstart", "pointerdown"].forEach(ev => addEventListener(ev, () => { lastInput = ev; }, { passive: true }));
+}
+
+/* Palettes: main ground, secondary text and accent, chosen from the bar and remembered per viewer. */
+let gridColor = "#f4ab3c";
+function applyPalette(id) {
+  const ok = CV.palettes.some(p => p[0] === id) ? id : "";
+  if (ok) document.documentElement.dataset.palette = ok; else delete document.documentElement.dataset.palette;
+  gridColor = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || gridColor;
+  document.querySelectorAll("#swatches button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.p === ok)));
+  try { localStorage.setItem("cv-palette", ok); } catch (e) { /* storage is optional */ }
+}
+document.getElementById("swatches").addEventListener("click", e => {
+  const b = e.target.closest("button[data-p]");
+  if (b) applyPalette(b.dataset.p);
+});
 function setNav(id) {
   document.querySelectorAll("#nav button").forEach(b => b.setAttribute("aria-current", String(b.dataset.go === id)));
 }
@@ -465,28 +560,40 @@ function settle() {
 }
 
 let pinned = null;
+/* Lights up the tasks a skill shows up in and reports how many sit outside the viewport. */
 function trace(tag) {
-  sheet.querySelectorAll(".hit, .on").forEach(e => e.classList.remove("hit", "on"));
-  let n = 0;
+  sheet.querySelectorAll(".hit, .on, .has-hit").forEach(e => e.classList.remove("hit", "on", "has-hit"));
+  const hits = [];
   if (tag) {
     const re = new RegExp(tag.dataset.k, "i");
-    sheet.querySelectorAll(".tasks li").forEach(li => { if (re.test(li.textContent)) { li.classList.add("hit"); n++; } });
+    sheet.querySelectorAll(".tasks li").forEach(li => {
+      if (re.test(li.textContent)) { li.classList.add("hit"); li.closest(".job").classList.add("has-hit"); hits.push(li); }
+    });
     tag.classList.add("on");
   }
-  sheet.classList.toggle("tracing", n > 0);
+  sheet.classList.toggle("tracing", hits.length > 0);
+  const out = hits.filter(li => { const r = li.getBoundingClientRect(); return r.bottom < barH() || r.top > innerHeight; });
+  const m = sheet.querySelector(".match");
+  if (m) m.textContent = hits.length ? CV.match[lang](hits.length, out.length) : "";
+  return { hits, out };
+}
+function pick(s) {
+  pinned = s && s !== pinned ? s : null;
+  const r = trace(pinned);
+  if (pinned && r.out.length) go(r.out[0], true);
 }
 const skillAt = e => e.target.closest && e.target.closest(".tags li[data-k]");
 sheet.addEventListener("pointerover", e => { const s = skillAt(e); if (s && e.pointerType === "mouse") trace(s); });
 sheet.addEventListener("pointerout", e => { if (skillAt(e) && e.pointerType === "mouse") trace(pinned); });
 sheet.addEventListener("click", e => {
   const s = skillAt(e);
-  if (s || pinned) { pinned = s && s !== pinned ? s : null; trace(pinned); }
+  if (s || pinned) pick(s);
   const g = e.target.closest && e.target.closest("[data-go]");
   if (g) go(g.dataset.go);
 });
 sheet.addEventListener("keydown", e => {
   const s = skillAt(e);
-  if (s && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pinned = s !== pinned ? s : null; trace(pinned); }
+  if (s && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pick(s); }
 });
 bar.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (g) go(g.dataset.go); });
 document.getElementById("who").dataset.go = "top";
@@ -542,7 +649,7 @@ function scrollFx() {
       .from(job.querySelectorAll(".tasks li"), { ...rise, y: 18, duration: .55, stagger: .07 }, "-=.35");
   });
   gsap.utils.toArray(".group").forEach(g => {
-    gsap.timeline({ scrollTrigger: once(g, "top 88%") })
+    gsap.timeline({ scrollTrigger: once(g, "top 92%") })
       .from(g.querySelector("h3"), { ...rise, y: 12, duration: .45 })
       .from(g.querySelectorAll(".tags li"), { ...rise, y: 10, scale: .7, duration: .4, ease: "back.out(2.2)", stagger: { each: .035, from: "random" } }, "<+.1");
   });
@@ -602,10 +709,12 @@ function render(next, mode) {
         </section>
       </div>
       <aside class="side">
-        <section id="skills" class="skills">
-          <div class="sec-head"><h2>${t(CV.h.skills)}</h2><p class="hint">${t(CV.hint)}</p></div>
-          <div class="groups">${CV.skills.map(g => `<div class="group"><h3>${t(g.name)}</h3><ul class="tags">${g.tags.map(tag).join("")}</ul></div>`).join("")}</div>
-        </section>
+        <div class="skills-rail">
+          <section id="skills" class="skills">
+            <div class="sec-head"><h2>${t(CV.h.skills)}</h2><p class="hint">${t(CV.hint)}</p><p class="match" aria-live="polite"></p></div>
+            <div class="groups">${CV.skills.map(g => `<div class="group"><h3>${t(g.name)}</h3><ul class="tags">${g.tags.map(tag).join("")}</ul></div>`).join("")}</div>
+          </section>
+        </div>
         <section id="certs">
           <div class="sec-head"><h2>${t(CV.h.certs)}</h2></div>
           <ul class="list">${CV.certs.map(c => `<li><b>${c.name}</b><span>${t(c.by)}</span></li>`).join("")}</ul>
@@ -616,7 +725,7 @@ function render(next, mode) {
         </section>
       </aside>
     </div>
-    <footer class="foot">
+    <footer class="foot" id="contact">
       <div class="foot-in">
         <p class="foot-line">${t(CV.foot.line)}</p>
         <a class="foot-mail" href="mailto:casettagian@gmail.com">casettagian@gmail.com</a>
@@ -628,6 +737,9 @@ function render(next, mode) {
       </div>
     </footer>`;
   document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  const cur = document.documentElement.dataset.palette || "";
+  document.getElementById("swatches").innerHTML = CV.palettes.map(([id, label, bg, ac]) =>
+    `<button type="button" data-p="${id}" aria-pressed="${id === cur}" title="${t(label)}" aria-label="${t(label)}" style="--sw-bg:${bg};--sw-ac:${ac}"></button>`).join("");
   document.querySelectorAll("[data-pdf]").forEach(a => { a.href = `Gianfranco-Casetta-CV-${lang.toUpperCase()}.pdf`; });
   if (!document.querySelector(".bar .pdf").hidden) document.querySelectorAll(".foot .pdf").forEach(a => { a.hidden = false; });
   sheet.querySelector(".head").prepend(gridCanvas);
@@ -637,7 +749,7 @@ function render(next, mode) {
 /* Header grid: dots light up near the pointer, a few packets travel the rows, clicks send a ripple. */
 (function liveGrid() {
   const ctx = gridCanvas.getContext("2d");
-  const STEP = 18, OFF = 13, amber = getComputedStyle(document.documentElement).getPropertyValue("--amber").trim() || "#f4ab3c";
+  const STEP = 18, OFF = 13;
   let w = 0, h = 0, cw = 0, ch = 0, px = -999, py = -999, last = 0;
   const ripples = [];
   gridCanvas.ping = (x, y) => ripples.push({ x, y, t: performance.now() });
@@ -661,7 +773,7 @@ function render(next, mode) {
     const r = gridCanvas.getBoundingClientRect();
     if (r.bottom < 0) { requestAnimationFrame(frame); return; } /* off screen: skip drawing */
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = amber;
+    ctx.fillStyle = gridColor;
     for (let i = ripples.length - 1; i >= 0; i--) {
       const rp = ripples[i], age = (now - rp.t) / 1000;
       if (age > 1.8) { ripples.splice(i, 1); continue; }
@@ -726,5 +838,11 @@ document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click
   render(b.dataset.lang, "swap");
 }));
 window.addEventListener("hashchange", () => { if (/^#(en|es)$/.test(location.hash)) render(fromHash(), "swap"); });
+(function initPalette() {
+  let p = (location.search.match(/[?&]palette=(\w+)/) || [])[1];
+  if (p === undefined) { try { p = localStorage.getItem("cv-palette") || ""; } catch (e) { p = ""; } }
+  applyPalette(p);
+})();
+setupLenis();
 render(fromHash(), "intro");
 </script>
