@@ -12,7 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <title>Gianfranco Casetta CV</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;700&display=swap">
 <style>
 /* Two layouts from one document.
    Print (base rules): one A4 sheet, name header over a career timeline beside a reference column.
@@ -22,13 +22,13 @@
 :root {
   color-scheme: dark;
   /* Palette: main ground (ink, sheet, raise, line), secondary text (paper, mist), accent */
-  --ink: #0e1b2c;        /* page ground, deep ink blue */
-  --sheet: #13243a;      /* raised surface */
-  --raise: #1a3049;      /* chips */
-  --line: #2b4563;       /* rules and borders */
-  --paper: #efe8d8;      /* primary text, warm ivory */
-  --mist: #a9b9cb;       /* secondary text */
-  --accent: #f4ab3c;     /* accent */
+  --ink: #0b1714;        /* page ground, deep forest green */
+  --sheet: #10201c;      /* raised surface */
+  --raise: #172b26;      /* chips */
+  --line: #24423a;       /* rules and borders */
+  --paper: #e7efe9;      /* primary text */
+  --mist: #9db5ab;       /* secondary text */
+  --accent: #b8a4ff;     /* accent, lilac */
   --accent-soft: color-mix(in srgb, var(--accent) 15%, transparent);
   --display: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", sans-serif;
   --body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -36,9 +36,16 @@
 }
 /* Alternative palettes, all dark and cool, picked from the bar */
 :root[data-palette="violet"] { --ink: #120f22; --sheet: #19152e; --raise: #221d3d; --line: #352d59; --paper: #eeebf7; --mist: #aba4c8; --accent: #6ee7c8; }
-:root[data-palette="forest"] { --ink: #0b1714; --sheet: #10201c; --raise: #172b26; --line: #24423a; --paper: #e7efe9; --mist: #9db5ab; --accent: #b8a4ff; }
+:root[data-palette="ink"]    { --ink: #0e1b2c; --sheet: #13243a; --raise: #1a3049; --line: #2b4563; --paper: #efe8d8; --mist: #a9b9cb; --accent: #f4ab3c; }
 :root[data-palette="slate"]  { --ink: #0d141c; --sheet: #121c27; --raise: #192634; --line: #283a4e; --paper: #e7edf3; --mist: #9aaec2; --accent: #56c8f0; }
 :root[data-palette="petrol"] { --ink: #0a1a1f; --sheet: #0f242a; --raise: #163037; --line: #22464f; --paper: #e9f0ef; --mist: #9cb7b6; --accent: #ff8a73; }
+/* High-contrast terminal mode: black and phosphor green, monospace headings */
+:root[data-palette="matrix"] {
+  --ink: #000; --sheet: #020702; --raise: #061206; --line: #12401c; --paper: #dcffe4; --mist: #5fdc7e; --accent: #33ff66;
+  --display: "IBM Plex Mono", Consolas, "Courier New", monospace;
+}
+:root[data-palette="matrix"] .name { letter-spacing: -.06em; }
+:root[data-palette="matrix"] .tasks strong { color: var(--accent); }
 * { box-sizing: border-box; }
 body {
   background: var(--ink);
@@ -60,7 +67,7 @@ button { font: inherit; }
 /* Screen-only pieces are hidden in the base (print) layout */
 .progress, .who, .nav, .cue, .sub, .foot { display: none; }
 .hero-in, .sec-head, .groups, .skills-rail { display: contents; }
-.match, .swatches { display: none; }
+.swatches { display: none; }
 
 .bar {
   width: 100%; max-width: 210mm; margin: 0 auto 12px;
@@ -163,7 +170,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
 
 /* ---------- Screen: a site that scales with the monitor ---------- */
 @media screen {
-  html { font-size: clamp(15px, calc(11.7px + .241vw), 20px); scroll-behavior: smooth; }
+  html { font-size: clamp(15px, calc(11.7px + .241vw), 20px); }
   :root {
     --gl: max(clamp(16px, 4vw, 4.5rem), env(safe-area-inset-left, 0px));
     --gr: max(clamp(16px, 4vw, 4.5rem), env(safe-area-inset-right, 0px));
@@ -203,20 +210,15 @@ section { display: flex; flex-direction: column; gap: 12px; }
   .lang button, .pdf:not([hidden]) { padding: .45rem .85rem; }
   .lang, .pdf:not([hidden]) { border-radius: 99px; }
   .pdf:not([hidden]):hover { border-color: var(--accent); }
-  .swatches { display: flex; gap: .35rem; padding: 0 .3rem; }
+  /* Palette picker: one accent dot per palette, all the same size; the active one gets a ring */
+  .swatches { display: flex; align-items: center; gap: .7rem; padding: 0 .5rem; }
   .swatches button {
-    width: 1.35rem; height: 1.35rem; border-radius: 50%; padding: 0; cursor: pointer;
-    border: 2px solid transparent; outline: 1px solid var(--line); outline-offset: 1px;
-    background: linear-gradient(135deg, var(--sw-bg) 50%, var(--sw-ac) 50%);
-    transition: transform .2s;
+    flex: none; width: .95rem; height: .95rem; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+    background: var(--sw); box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 18%, transparent);
+    transition: transform .2s, box-shadow .2s;
   }
-  .swatches button:hover { transform: scale(1.12); }
-  .swatches button[aria-pressed="true"] { outline: 2px solid var(--accent); }
-
-  /* Lenis smooth scrolling */
-  html.lenis, html.lenis body { height: auto; }
-  .lenis.lenis-smooth { scroll-behavior: auto !important; }
-  .lenis.lenis-stopped { overflow: hidden; }
+  .swatches button:hover { transform: scale(1.18); }
+  .swatches button[aria-pressed="true"] { box-shadow: 0 0 0 2.5px var(--ink), 0 0 0 4px var(--paper); }
 
   /* Sheet becomes the page */
   .sheet { max-width: none; min-height: 0; margin: 0; border: 0; background: transparent; display: block; }
@@ -254,8 +256,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
   section { gap: 1.6rem; scroll-margin-top: 6rem; }
   .sec-head { display: flex; flex-direction: column; gap: .9rem; }
   h2 { font-size: clamp(1.8rem, 2.7vw, 3.3rem); line-height: 1.05; letter-spacing: -.015em; padding: 0; border: 0; text-wrap: balance; }
-  .sub, .hint, .match { display: block; margin: 0; font: 400 .85rem/1.5 var(--mono); color: var(--mist); }
-  .match { color: var(--accent); min-height: 1.5em; }
+  .sub { display: block; margin: 0; font: 400 .85rem/1.5 var(--mono); color: var(--mist); }
   #work { order: 1; grid-column: 1 / span 8; gap: 2.4rem; }
   .skills-rail { display: block; order: 2; grid-column: 9 / -1; align-self: stretch; }
   #skills { position: sticky; top: 5.5rem; gap: 1.6rem; padding: 1.6rem; background: var(--sheet); border: 1px solid var(--line); border-radius: .9rem; }
@@ -391,7 +392,18 @@ section { display: flex; flex-direction: column; gap: 12px; }
 !function(D,u){"object"==typeof exports&&"undefined"!=typeof module?u(exports):"function"==typeof define&&define.amd?define(["exports"],u):u((D=D||self).window=D.window||{})}(this,function(D){"use strict";var s=/(?:^\s+|\s+$)/g,a=/([\uD800-\uDBFF][\uDC00-\uDFFF](?:[\u200D\uFE0F][\uD800-\uDBFF][\uDC00-\uDFFF]){2,}|\uD83D\uDC69(?:\u200D(?:(?:\uD83D\uDC69\u200D)?\uD83D\uDC67|(?:\uD83D\uDC69\u200D)?\uD83D\uDC66)|\uD83C[\uDFFB-\uDFFF])|\uD83D\uDC69\u200D(?:\uD83D\uDC69\u200D)?\uD83D\uDC66\u200D\uD83D\uDC66|\uD83D\uDC69\u200D(?:\uD83D\uDC69\u200D)?\uD83D\uDC67\u200D(?:\uD83D[\uDC66\uDC67])|\uD83C\uDFF3\uFE0F\u200D\uD83C\uDF08|(?:\uD83C[\uDFC3\uDFC4\uDFCA]|\uD83D[\uDC6E\uDC71\uDC73\uDC77\uDC81\uDC82\uDC86\uDC87\uDE45-\uDE47\uDE4B\uDE4D\uDE4E\uDEA3\uDEB4-\uDEB6]|\uD83E[\uDD26\uDD37-\uDD39\uDD3D\uDD3E\uDDD6-\uDDDD])(?:\uD83C[\uDFFB-\uDFFF])\u200D[\u2642\u2640]\uFE0F|\uD83D\uDC69(?:\uD83C[\uDFFB-\uDFFF])\u200D(?:\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDD27\uDCBC\uDD2C\uDE80\uDE92])|(?:\uD83C[\uDFC3\uDFC4\uDFCA]|\uD83D[\uDC6E\uDC6F\uDC71\uDC73\uDC77\uDC81\uDC82\uDC86\uDC87\uDE45-\uDE47\uDE4B\uDE4D\uDE4E\uDEA3\uDEB4-\uDEB6]|\uD83E[\uDD26\uDD37-\uDD39\uDD3C-\uDD3E\uDDD6-\uDDDF])\u200D[\u2640\u2642]\uFE0F|\uD83C\uDDFD\uD83C\uDDF0|\uD83C\uDDF6\uD83C\uDDE6|\uD83C\uDDF4\uD83C\uDDF2|\uD83C\uDDE9(?:\uD83C[\uDDEA\uDDEC\uDDEF\uDDF0\uDDF2\uDDF4\uDDFF])|\uD83C\uDDF7(?:\uD83C[\uDDEA\uDDF4\uDDF8\uDDFA\uDDFC])|\uD83C\uDDE8(?:\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDEE\uDDF0-\uDDF5\uDDF7\uDDFA-\uDDFF])|(?:\u26F9|\uD83C[\uDFCC\uDFCB]|\uD83D\uDD75)(?:\uFE0F\u200D[\u2640\u2642]|(?:\uD83C[\uDFFB-\uDFFF])\u200D[\u2640\u2642])\uFE0F|(?:\uD83D\uDC41\uFE0F\u200D\uD83D\uDDE8|\uD83D\uDC69(?:\uD83C[\uDFFB-\uDFFF])\u200D[\u2695\u2696\u2708]|\uD83D\uDC69\u200D[\u2695\u2696\u2708]|\uD83D\uDC68(?:(?:\uD83C[\uDFFB-\uDFFF])\u200D[\u2695\u2696\u2708]|\u200D[\u2695\u2696\u2708]))\uFE0F|\uD83C\uDDF2(?:\uD83C[\uDDE6\uDDE8-\uDDED\uDDF0-\uDDFF])|\uD83D\uDC69\u200D(?:\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\u2764\uFE0F\u200D(?:\uD83D\uDC8B\u200D(?:\uD83D[\uDC68\uDC69])|\uD83D[\uDC68\uDC69]))|\uD83C\uDDF1(?:\uD83C[\uDDE6-\uDDE8\uDDEE\uDDF0\uDDF7-\uDDFB\uDDFE])|\uD83C\uDDEF(?:\uD83C[\uDDEA\uDDF2\uDDF4\uDDF5])|\uD83C\uDDED(?:\uD83C[\uDDF0\uDDF2\uDDF3\uDDF7\uDDF9\uDDFA])|\uD83C\uDDEB(?:\uD83C[\uDDEE-\uDDF0\uDDF2\uDDF4\uDDF7])|[#\*0-9]\uFE0F\u20E3|\uD83C\uDDE7(?:\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEF\uDDF1-\uDDF4\uDDF6-\uDDF9\uDDFB\uDDFC\uDDFE\uDDFF])|\uD83C\uDDE6(?:\uD83C[\uDDE8-\uDDEC\uDDEE\uDDF1\uDDF2\uDDF4\uDDF6-\uDDFA\uDDFC\uDDFD\uDDFF])|\uD83C\uDDFF(?:\uD83C[\uDDE6\uDDF2\uDDFC])|\uD83C\uDDF5(?:\uD83C[\uDDE6\uDDEA-\uDDED\uDDF0-\uDDF3\uDDF7-\uDDF9\uDDFC\uDDFE])|\uD83C\uDDFB(?:\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDEE\uDDF3\uDDFA])|\uD83C\uDDF3(?:\uD83C[\uDDE6\uDDE8\uDDEA-\uDDEC\uDDEE\uDDF1\uDDF4\uDDF5\uDDF7\uDDFA\uDDFF])|\uD83C\uDFF4\uDB40\uDC67\uDB40\uDC62(?:\uDB40\uDC77\uDB40\uDC6C\uDB40\uDC73|\uDB40\uDC73\uDB40\uDC63\uDB40\uDC74|\uDB40\uDC65\uDB40\uDC6E\uDB40\uDC67)\uDB40\uDC7F|\uD83D\uDC68(?:\u200D(?:\u2764\uFE0F\u200D(?:\uD83D\uDC8B\u200D)?\uD83D\uDC68|(?:(?:\uD83D[\uDC68\uDC69])\u200D)?\uD83D\uDC66\u200D\uD83D\uDC66|(?:(?:\uD83D[\uDC68\uDC69])\u200D)?\uD83D\uDC67\u200D(?:\uD83D[\uDC66\uDC67])|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92])|(?:\uD83C[\uDFFB-\uDFFF])\u200D(?:\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]))|\uD83C\uDDF8(?:\uD83C[\uDDE6-\uDDEA\uDDEC-\uDDF4\uDDF7-\uDDF9\uDDFB\uDDFD-\uDDFF])|\uD83C\uDDF0(?:\uD83C[\uDDEA\uDDEC-\uDDEE\uDDF2\uDDF3\uDDF5\uDDF7\uDDFC\uDDFE\uDDFF])|\uD83C\uDDFE(?:\uD83C[\uDDEA\uDDF9])|\uD83C\uDDEE(?:\uD83C[\uDDE8-\uDDEA\uDDF1-\uDDF4\uDDF6-\uDDF9])|\uD83C\uDDF9(?:\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDED\uDDEF-\uDDF4\uDDF7\uDDF9\uDDFB\uDDFC\uDDFF])|\uD83C\uDDEC(?:\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEE\uDDF1-\uDDF3\uDDF5-\uDDFA\uDDFC\uDDFE])|\uD83C\uDDFA(?:\uD83C[\uDDE6\uDDEC\uDDF2\uDDF3\uDDF8\uDDFE\uDDFF])|\uD83C\uDDEA(?:\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDED\uDDF7-\uDDFA])|\uD83C\uDDFC(?:\uD83C[\uDDEB\uDDF8])|(?:\u26F9|\uD83C[\uDFCB\uDFCC]|\uD83D\uDD75)(?:\uD83C[\uDFFB-\uDFFF])|(?:\uD83C[\uDFC3\uDFC4\uDFCA]|\uD83D[\uDC6E\uDC71\uDC73\uDC77\uDC81\uDC82\uDC86\uDC87\uDE45-\uDE47\uDE4B\uDE4D\uDE4E\uDEA3\uDEB4-\uDEB6]|\uD83E[\uDD26\uDD37-\uDD39\uDD3D\uDD3E\uDDD6-\uDDDD])(?:\uD83C[\uDFFB-\uDFFF])|(?:[\u261D\u270A-\u270D]|\uD83C[\uDF85\uDFC2\uDFC7]|\uD83D[\uDC42\uDC43\uDC46-\uDC50\uDC66\uDC67\uDC70\uDC72\uDC74-\uDC76\uDC78\uDC7C\uDC83\uDC85\uDCAA\uDD74\uDD7A\uDD90\uDD95\uDD96\uDE4C\uDE4F\uDEC0\uDECC]|\uD83E[\uDD18-\uDD1C\uDD1E\uDD1F\uDD30-\uDD36\uDDD1-\uDDD5])(?:\uD83C[\uDFFB-\uDFFF])|\uD83D\uDC68(?:\u200D(?:(?:(?:\uD83D[\uDC68\uDC69])\u200D)?\uD83D\uDC67|(?:(?:\uD83D[\uDC68\uDC69])\u200D)?\uD83D\uDC66)|\uD83C[\uDFFB-\uDFFF])|(?:[\u261D\u26F9\u270A-\u270D]|\uD83C[\uDF85\uDFC2-\uDFC4\uDFC7\uDFCA-\uDFCC]|\uD83D[\uDC42\uDC43\uDC46-\uDC50\uDC66-\uDC69\uDC6E\uDC70-\uDC78\uDC7C\uDC81-\uDC83\uDC85-\uDC87\uDCAA\uDD74\uDD75\uDD7A\uDD90\uDD95\uDD96\uDE45-\uDE47\uDE4B-\uDE4F\uDEA3\uDEB4-\uDEB6\uDEC0\uDECC]|\uD83E[\uDD18-\uDD1C\uDD1E\uDD1F\uDD26\uDD30-\uDD39\uDD3D\uDD3E\uDDD1-\uDDDD])(?:\uD83C[\uDFFB-\uDFFF])?|(?:[\u231A\u231B\u23E9-\u23EC\u23F0\u23F3\u25FD\u25FE\u2614\u2615\u2648-\u2653\u267F\u2693\u26A1\u26AA\u26AB\u26BD\u26BE\u26C4\u26C5\u26CE\u26D4\u26EA\u26F2\u26F3\u26F5\u26FA\u26FD\u2705\u270A\u270B\u2728\u274C\u274E\u2753-\u2755\u2757\u2795-\u2797\u27B0\u27BF\u2B1B\u2B1C\u2B50\u2B55]|\uD83C[\uDC04\uDCCF\uDD8E\uDD91-\uDD9A\uDDE6-\uDDFF\uDE01\uDE1A\uDE2F\uDE32-\uDE36\uDE38-\uDE3A\uDE50\uDE51\uDF00-\uDF20\uDF2D-\uDF35\uDF37-\uDF7C\uDF7E-\uDF93\uDFA0-\uDFCA\uDFCF-\uDFD3\uDFE0-\uDFF0\uDFF4\uDFF8-\uDFFF]|\uD83D[\uDC00-\uDC3E\uDC40\uDC42-\uDCFC\uDCFF-\uDD3D\uDD4B-\uDD4E\uDD50-\uDD67\uDD7A\uDD95\uDD96\uDDA4\uDDFB-\uDE4F\uDE80-\uDEC5\uDECC\uDED0-\uDED2\uDEEB\uDEEC\uDEF4-\uDEF8]|\uD83E[\uDD10-\uDD3A\uDD3C-\uDD3E\uDD40-\uDD45\uDD47-\uDD4C\uDD50-\uDD6B\uDD80-\uDD97\uDDC0\uDDD0-\uDDE6])|(?:[#\*0-9\xA9\xAE\u203C\u2049\u2122\u2139\u2194-\u2199\u21A9\u21AA\u231A\u231B\u2328\u23CF\u23E9-\u23F3\u23F8-\u23FA\u24C2\u25AA\u25AB\u25B6\u25C0\u25FB-\u25FE\u2600-\u2604\u260E\u2611\u2614\u2615\u2618\u261D\u2620\u2622\u2623\u2626\u262A\u262E\u262F\u2638-\u263A\u2640\u2642\u2648-\u2653\u2660\u2663\u2665\u2666\u2668\u267B\u267F\u2692-\u2697\u2699\u269B\u269C\u26A0\u26A1\u26AA\u26AB\u26B0\u26B1\u26BD\u26BE\u26C4\u26C5\u26C8\u26CE\u26CF\u26D1\u26D3\u26D4\u26E9\u26EA\u26F0-\u26F5\u26F7-\u26FA\u26FD\u2702\u2705\u2708-\u270D\u270F\u2712\u2714\u2716\u271D\u2721\u2728\u2733\u2734\u2744\u2747\u274C\u274E\u2753-\u2755\u2757\u2763\u2764\u2795-\u2797\u27A1\u27B0\u27BF\u2934\u2935\u2B05-\u2B07\u2B1B\u2B1C\u2B50\u2B55\u3030\u303D\u3297\u3299]|\uD83C[\uDC04\uDCCF\uDD70\uDD71\uDD7E\uDD7F\uDD8E\uDD91-\uDD9A\uDDE6-\uDDFF\uDE01\uDE02\uDE1A\uDE2F\uDE32-\uDE3A\uDE50\uDE51\uDF00-\uDF21\uDF24-\uDF93\uDF96\uDF97\uDF99-\uDF9B\uDF9E-\uDFF0\uDFF3-\uDFF5\uDFF7-\uDFFF]|\uD83D[\uDC00-\uDCFD\uDCFF-\uDD3D\uDD49-\uDD4E\uDD50-\uDD67\uDD6F\uDD70\uDD73-\uDD7A\uDD87\uDD8A-\uDD8D\uDD90\uDD95\uDD96\uDDA4\uDDA5\uDDA8\uDDB1\uDDB2\uDDBC\uDDC2-\uDDC4\uDDD1-\uDDD3\uDDDC-\uDDDE\uDDE1\uDDE3\uDDE8\uDDEF\uDDF3\uDDFA-\uDE4F\uDE80-\uDEC5\uDECB-\uDED2\uDEE0-\uDEE5\uDEE9\uDEEB\uDEEC\uDEF0\uDEF3-\uDEF8]|\uD83E[\uDD10-\uDD3A\uDD3C-\uDD3E\uDD40-\uDD45\uDD47-\uDD4C\uDD50-\uDD6B\uDD80-\uDD97\uDDC0\uDDD0-\uDDE6])\uFE0F)/;function getText(D){var u=D.nodeType,F="";if(1===u||9===u||11===u){if("string"==typeof D.textContent)return D.textContent;for(D=D.firstChild;D;D=D.nextSibling)F+=getText(D)}else if(3===u||4===u)return D.nodeValue;return F}function emojiSafeSplit(D,u,F,C,E){if(D+="",F&&(D=D.trim?D.trim():D.replace(s,"")),u&&""!==u)return D.replace(/>/g,"&gt;").replace(/</g,"&lt;").split(u);for(var e,t,i=[],n=D.length,r=0;r<n;r++)(55296<=(t=D.charAt(r)).charCodeAt(0)&&t.charCodeAt(0)<=56319||65024<=D.charCodeAt(r+1)&&D.charCodeAt(r+1)<=65039)&&(e=((D.substr(r,12).split(a)||[])[1]||"").length||2,t=D.substr(r,e),r+=e-(i.emoji=1)),i.push(E?t:">"===t?"&gt;":"<"===t?"&lt;":!C||" "!==t||" "!==D.charAt(r-1)&&" "!==D.charAt(r+1)?t:"&nbsp;");return i}var o=(CharSet.prototype.grow=function grow(D){for(var u=0;u<20;u++)this.sets[u]+=F(D-this.length,this.chars);this.length=D},CharSet);function CharSet(D){this.chars=emojiSafeSplit(D),this.sets=[],this.length=50;for(var u=0;u<20;u++)this.sets[u]=F(80,this.chars)}function i(){return u||"undefined"!=typeof window&&(u=window.gsap)&&u.registerPlugin&&u}function p(){B=u=i()}var u,B,l=/\s+/g,F=function _scrambleText(D,u){for(var F=u.length,C="";-1<--D;)C+=u[~~(Math.random()*F)];return C},C="ABCDEFGHIJKLMNOPQRSTUVWXYZ",E=C.toLowerCase(),A={upperCase:new o(C),lowerCase:new o(E),upperAndLowerCase:new o(C+E)},e={version:"3.15.1",name:"scrambleText",register:function register(D){u=D,p()},init:function init(D,u,F){if(B||p(),this.prop="innerHTML"in D?"innerHTML":"textContent"in D?"textContent":0,this.prop){this.target=D,"object"!=typeof u&&(u={text:u});var C,E,e,t,i=u.text||u.value||"",n=!1!==u.trim,r=this;return r.delimiter=C=u.delimiter||"",r.original=emojiSafeSplit(getText(D).replace(l," ").split("&nbsp;").join(""),C,n),"{original}"!==i&&!0!==i&&null!=i||(i=r.original.join(C)),r.text=emojiSafeSplit((i||"").replace(l," "),C,n),r.hasClass=!(!u.newClass&&!u.oldClass),r.newClass=u.newClass,r.oldClass=u.oldClass,t=""===C,r.textHasEmoji=t&&!!r.text.emoji,r.charsHaveEmoji=!!u.chars&&!!emojiSafeSplit(u.chars).emoji,r.length=t?r.original.length:r.original.join(C).length,r.lengthDif=(t?r.text.length:r.text.join(C).length)-r.length,r.fillChar=u.fillChar||u.chars&&~u.chars.indexOf(" ")?"&nbsp;":"",r.charSet=e=A[u.chars||"upperCase"]||new o(u.chars),r.speed=.05/(u.speed||1),r.prevScrambleTime=0,r.setIndex=20*Math.random()|0,(E=r.length+Math.max(r.lengthDif,0))>e.length&&e.grow(E),r.chars=e.sets[r.setIndex],r.revealDelay=u.revealDelay||0,r.tweenLength=!1!==u.tweenLength,r.tween=F,r.rightToLeft=!!u.rightToLeft,r._props.push("scrambleText","text"),1}},render:function render(D,u){var F,C,E,e,t,i,n,r,s,a,o,B=u.target,l=u.prop,A=u.text,h=u.delimiter,p=u.tween,f=u.prevScrambleTime,g=u.revealDelay,c=u.setIndex,d=u.chars,m=u.charSet,x=u.length,S=u.textHasEmoji,j=u.charsHaveEmoji,w=u.lengthDif,b=u.tweenLength,v=u.oldClass,T=u.newClass,_=u.rightToLeft,y=u.fillChar,L=u.speed,M=u.original,H=u.hasClass,I=A.length,P=p._time,O=P-f;g&&(p._from&&(P=p._dur-P),D=0===P?0:P<g?1e-6:P===p._dur?1:p._ease((P-g)/(p._dur-g))),D<0?D=0:1<D&&(D=1),_&&(D=1-D),F=~~(D*I+.5),e=D?((L<O||O<-L)&&(u.setIndex=c=(c+(19*Math.random()|0))%20,u.chars=m.sets[c],u.prevScrambleTime+=O),d):M.join(h),o=p._from?D:1-D,a=x+(b?p._from?o*o*o:1-o*o*o:1)*w,e=_?1!==D||!p._from&&"isFromStart"!==p.data?(n=A.slice(F).join(h),E=j?emojiSafeSplit(e).slice(0,a-(S?emojiSafeSplit(n):n).length+.5|0).join(""):e.substr(0,a-(S?emojiSafeSplit(n):n).length+.5|0),n):(E="",M.join(h)):(E=A.slice(0,F).join(h),C=(S?emojiSafeSplit(E):E).length,j?emojiSafeSplit(e).slice(C,a+.5|0).join(""):e.substr(C,a-C+.5|0)),n=H?((t=(r=_?v:T)&&0!=F)?"<span class='"+r+"'>":"")+E+(t?"</span>":"")+((i=(s=_?T:v)&&F!==I)?"<span class='"+s+"'>":"")+h+e+(i?"</span>":""):E+h+e,B[l]="&nbsp;"===y&&~n.indexOf("  ")?n.split("  ").join("&nbsp;&nbsp;"):n}};e.emojiSafeSplit=emojiSafeSplit,e.getText=getText,i()&&u.registerPlugin(e),D.ScrambleTextPlugin=e,D.default=e;if (typeof(window)==="undefined"||window!==D){Object.defineProperty(D,"__esModule",{value:!0})} else {delete D.default}});
 
 </script>
-<script>function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;value=0;from=0;to=0;currentTime=0;lerp;duration;easing;onUpdate;advance(i){if(!this.isRunning)return;let e=!1;if(this.duration&&this.easing){this.currentTime+=i;const s=t(0,this.currentTime/this.duration,1);e=s>=1;const o=e?1:this.easing(s);this.value=this.from+(this.to-this.from)*o}else this.lerp?(this.value=function(t,i,e,s){return function(t,i,e){return(1-e)*t+e*i}(t,i,1-Math.exp(-e*s))}(this.value,this.to,60*this.lerp,i),Math.round(this.value)===this.to&&(this.value=this.to,e=!0)):(this.value=this.to,e=!0);e&&this.stop(),this.onUpdate?.(this.value,e)}stop(){this.isRunning=!1}fromTo(t,i,{lerp:e,duration:s,easing:o,onStart:n,onUpdate:r}){this.from=this.value=t,this.to=i,this.lerp=e,this.duration=s,this.easing=o,this.currentTime=0,this.isRunning=!0,n?.(),this.onUpdate=r}};var e=class{constructor(t,i,{autoResize:e=!0,debounce:s=250}={}){this.wrapper=t,this.content=i,e&&(this.debouncedResize=function(t,i){let e;return function(...s){let o=this;clearTimeout(e),e=setTimeout((()=>{e=void 0,t.apply(o,s)}),i)}}(this.resize,s),this.wrapper instanceof Window?window.addEventListener("resize",this.debouncedResize,!1):(this.wrapperResizeObserver=new ResizeObserver(this.debouncedResize),this.wrapperResizeObserver.observe(this.wrapper)),this.contentResizeObserver=new ResizeObserver(this.debouncedResize),this.contentResizeObserver.observe(this.content)),this.resize()}width=0;height=0;scrollHeight=0;scrollWidth=0;debouncedResize;wrapperResizeObserver;contentResizeObserver;destroy(){this.wrapperResizeObserver?.disconnect(),this.contentResizeObserver?.disconnect(),this.wrapper===window&&this.debouncedResize&&window.removeEventListener("resize",this.debouncedResize,!1)}resize=()=>{this.onWrapperResize(),this.onContentResize()};onWrapperResize=()=>{this.wrapper instanceof Window?(this.width=window.innerWidth,this.height=window.innerHeight):(this.width=this.wrapper.clientWidth,this.height=this.wrapper.clientHeight)};onContentResize=()=>{this.wrapper instanceof Window?(this.scrollHeight=this.content.scrollHeight,this.scrollWidth=this.content.scrollWidth):(this.scrollHeight=this.wrapper.scrollHeight,this.scrollWidth=this.wrapper.scrollWidth)};get limit(){return{x:this.scrollWidth-this.width,y:this.scrollHeight-this.height}}},s=class{events={};emit(t,...i){let e=this.events[t]||[];for(let t=0,s=e.length;t<s;t++)e[t]?.(...i)}on(t,i){return this.events[t]?.push(i)||(this.events[t]=[i]),()=>{this.events[t]=this.events[t]?.filter((t=>i!==t))}}off(t,i){this.events[t]=this.events[t]?.filter((t=>i!==t))}destroy(){this.events={}}},o=100/6,n={passive:!1},r=class{constructor(t,i={wheelMultiplier:1,touchMultiplier:1}){this.element=t,this.options=i,window.addEventListener("resize",this.onWindowResize,!1),this.onWindowResize(),this.element.addEventListener("wheel",this.onWheel,n),this.element.addEventListener("touchstart",this.onTouchStart,n),this.element.addEventListener("touchmove",this.onTouchMove,n),this.element.addEventListener("touchend",this.onTouchEnd,n)}touchStart={x:0,y:0};lastDelta={x:0,y:0};window={width:0,height:0};emitter=new s;on(t,i){return this.emitter.on(t,i)}destroy(){this.emitter.destroy(),window.removeEventListener("resize",this.onWindowResize,!1),this.element.removeEventListener("wheel",this.onWheel,n),this.element.removeEventListener("touchstart",this.onTouchStart,n),this.element.removeEventListener("touchmove",this.onTouchMove,n),this.element.removeEventListener("touchend",this.onTouchEnd,n)}onTouchStart=t=>{const{clientX:i,clientY:e}=t.targetTouches?t.targetTouches[0]:t;this.touchStart.x=i,this.touchStart.y=e,this.lastDelta={x:0,y:0},this.emitter.emit("scroll",{deltaX:0,deltaY:0,event:t})};onTouchMove=t=>{const{clientX:i,clientY:e}=t.targetTouches?t.targetTouches[0]:t,s=-(i-this.touchStart.x)*this.options.touchMultiplier,o=-(e-this.touchStart.y)*this.options.touchMultiplier;this.touchStart.x=i,this.touchStart.y=e,this.lastDelta={x:s,y:o},this.emitter.emit("scroll",{deltaX:s,deltaY:o,event:t})};onTouchEnd=t=>{this.emitter.emit("scroll",{deltaX:this.lastDelta.x,deltaY:this.lastDelta.y,event:t})};onWheel=t=>{let{deltaX:i,deltaY:e,deltaMode:s}=t;i*=1===s?o:2===s?this.window.width:1,e*=1===s?o:2===s?this.window.height:1,i*=this.options.wheelMultiplier,e*=this.options.wheelMultiplier,this.emitter.emit("scroll",{deltaX:i,deltaY:e,event:t})};onWindowResize=()=>{this.window={width:window.innerWidth,height:window.innerHeight}}},Lenis=class{_isScrolling=!1;_isStopped=!1;_isLocked=!1;_preventNextNativeScrollEvent=!1;_resetVelocityTimeout=null;__rafID=null;isTouching;time=0;userData={};lastVelocity=0;velocity=0;direction=0;options;targetScroll;animatedScroll;animate=new i;emitter=new s;dimensions;virtualScroll;constructor({wrapper:t=window,content:i=document.documentElement,eventsTarget:s=t,smoothWheel:o=!0,syncTouch:n=!1,syncTouchLerp:l=.075,touchInertiaMultiplier:h=35,duration:a,easing:c=t=>Math.min(1,1.001-Math.pow(2,-10*t)),lerp:p=.1,infinite:d=!1,orientation:u="vertical",gestureOrientation:m="vertical",touchMultiplier:v=1,wheelMultiplier:S=1,autoResize:w=!0,prevent:g,virtualScroll:f,overscroll:y=!0,autoRaf:E=!1,anchors:T=!1,__experimental__naiveDimensions:z=!1}={}){window.lenisVersion="1.1.20",t&&t!==document.documentElement||(t=window),this.options={wrapper:t,content:i,eventsTarget:s,smoothWheel:o,syncTouch:n,syncTouchLerp:l,touchInertiaMultiplier:h,duration:a,easing:c,lerp:p,infinite:d,gestureOrientation:m,orientation:u,touchMultiplier:v,wheelMultiplier:S,autoResize:w,prevent:g,virtualScroll:f,overscroll:y,autoRaf:E,anchors:T,__experimental__naiveDimensions:z},this.dimensions=new e(t,i,{autoResize:w}),this.updateClassName(),this.targetScroll=this.animatedScroll=this.actualScroll,this.options.wrapper.addEventListener("scroll",this.onNativeScroll,!1),this.options.wrapper.addEventListener("scrollend",this.onScrollEnd,{capture:!0}),this.options.anchors&&this.options.wrapper===window&&this.options.wrapper.addEventListener("click",this.onClick,!1),this.options.wrapper.addEventListener("pointerdown",this.onPointerDown,!1),this.virtualScroll=new r(s,{touchMultiplier:v,wheelMultiplier:S}),this.virtualScroll.on("scroll",this.onVirtualScroll),this.options.autoRaf&&(this.__rafID=requestAnimationFrame(this.raf))}destroy(){this.emitter.destroy(),this.options.wrapper.removeEventListener("scroll",this.onNativeScroll,!1),this.options.wrapper.removeEventListener("scrollend",this.onScrollEnd,{capture:!0}),this.options.wrapper.removeEventListener("pointerdown",this.onPointerDown,!1),this.options.anchors&&this.options.wrapper===window&&this.options.wrapper.removeEventListener("click",this.onClick,!1),this.virtualScroll.destroy(),this.dimensions.destroy(),this.cleanUpClassName(),this.__rafID&&cancelAnimationFrame(this.__rafID)}on(t,i){return this.emitter.on(t,i)}off(t,i){return this.emitter.off(t,i)}onScrollEnd=t=>{t instanceof CustomEvent||"smooth"!==this.isScrolling&&!1!==this.isScrolling||t.stopPropagation()};dispatchScrollendEvent=()=>{this.options.wrapper.dispatchEvent(new CustomEvent("scrollend",{bubbles:this.options.wrapper===window,detail:{lenisScrollEnd:!0}}))};setScroll(t){this.isHorizontal?this.options.wrapper.scrollTo({left:t,behavior:"instant"}):this.options.wrapper.scrollTo({top:t,behavior:"instant"})}onClick=t=>{const i=t.composedPath().find((t=>t instanceof HTMLAnchorElement&&t.getAttribute("href")?.startsWith("#")));if(i){const t=i.getAttribute("href");if(t){const i="object"==typeof this.options.anchors&&this.options.anchors?this.options.anchors:void 0;this.scrollTo(t,i)}}};onPointerDown=t=>{1===t.button&&this.reset()};onVirtualScroll=t=>{if("function"==typeof this.options.virtualScroll&&!1===this.options.virtualScroll(t))return;const{deltaX:i,deltaY:e,event:s}=t;if(this.emitter.emit("virtual-scroll",{deltaX:i,deltaY:e,event:s}),s.ctrlKey)return;if(s.lenisStopPropagation)return;const o=s.type.includes("touch"),n=s.type.includes("wheel");this.isTouching="touchstart"===s.type||"touchmove"===s.type;const r=0===i&&0===e;if(this.options.syncTouch&&o&&"touchstart"===s.type&&r&&!this.isStopped&&!this.isLocked)return void this.reset();const l="vertical"===this.options.gestureOrientation&&0===e||"horizontal"===this.options.gestureOrientation&&0===i;if(r||l)return;let h=s.composedPath();h=h.slice(0,h.indexOf(this.rootElement));const a=this.options.prevent;if(h.find((t=>t instanceof HTMLElement&&("function"==typeof a&&a?.(t)||t.hasAttribute?.("data-lenis-prevent")||o&&t.hasAttribute?.("data-lenis-prevent-touch")||n&&t.hasAttribute?.("data-lenis-prevent-wheel")))))return;if(this.isStopped||this.isLocked)return void s.preventDefault();if(!(this.options.syncTouch&&o||this.options.smoothWheel&&n))return this.isScrolling="native",this.animate.stop(),void(s.lenisStopPropagation=!0);let c=e;"both"===this.options.gestureOrientation?c=Math.abs(e)>Math.abs(i)?e:i:"horizontal"===this.options.gestureOrientation&&(c=i),(!this.options.overscroll||this.options.infinite||this.options.wrapper!==window&&(this.animatedScroll>0&&this.animatedScroll<this.limit||0===this.animatedScroll&&e>0||this.animatedScroll===this.limit&&e<0))&&(s.lenisStopPropagation=!0),s.preventDefault();const p=o&&this.options.syncTouch,d=o&&"touchend"===s.type&&Math.abs(c)>5;d&&(c=this.velocity*this.options.touchInertiaMultiplier),this.scrollTo(this.targetScroll+c,{programmatic:!1,...p?{lerp:d?this.options.syncTouchLerp:1}:{lerp:this.options.lerp,duration:this.options.duration,easing:this.options.easing}})};resize(){this.dimensions.resize(),this.animatedScroll=this.targetScroll=this.actualScroll,this.emit()}emit(){this.emitter.emit("scroll",this)}onNativeScroll=()=>{if(null!==this._resetVelocityTimeout&&(clearTimeout(this._resetVelocityTimeout),this._resetVelocityTimeout=null),this._preventNextNativeScrollEvent)this._preventNextNativeScrollEvent=!1;else if(!1===this.isScrolling||"native"===this.isScrolling){const t=this.animatedScroll;this.animatedScroll=this.targetScroll=this.actualScroll,this.lastVelocity=this.velocity,this.velocity=this.animatedScroll-t,this.direction=Math.sign(this.animatedScroll-t),this.isStopped||(this.isScrolling="native"),this.emit(),0!==this.velocity&&(this._resetVelocityTimeout=setTimeout((()=>{this.lastVelocity=this.velocity,this.velocity=0,this.isScrolling=!1,this.emit()}),400))}};reset(){this.isLocked=!1,this.isScrolling=!1,this.animatedScroll=this.targetScroll=this.actualScroll,this.lastVelocity=this.velocity=0,this.animate.stop()}start(){this.isStopped&&(this.reset(),this.isStopped=!1)}stop(){this.isStopped||(this.reset(),this.isStopped=!0)}raf=t=>{const i=t-(this.time||t);this.time=t,this.animate.advance(.001*i),this.options.autoRaf&&(this.__rafID=requestAnimationFrame(this.raf))};scrollTo(i,{offset:e=0,immediate:s=!1,lock:o=!1,duration:n=this.options.duration,easing:r=this.options.easing,lerp:l=this.options.lerp,onStart:h,onComplete:a,force:c=!1,programmatic:p=!0,userData:d}={}){if(!this.isStopped&&!this.isLocked||c){if("string"==typeof i&&["top","left","start"].includes(i))i=0;else if("string"==typeof i&&["bottom","right","end"].includes(i))i=this.limit;else{let t;if("string"==typeof i?t=document.querySelector(i):i instanceof HTMLElement&&i?.nodeType&&(t=i),t){if(this.options.wrapper!==window){const t=this.rootElement.getBoundingClientRect();e-=this.isHorizontal?t.left:t.top}const s=t.getBoundingClientRect();i=(this.isHorizontal?s.left:s.top)+this.animatedScroll}}if("number"==typeof i){if(i+=e,i=Math.round(i),this.options.infinite?p&&(this.targetScroll=this.animatedScroll=this.scroll):i=t(0,i,this.limit),i===this.targetScroll)return h?.(this),void a?.(this);if(this.userData=d??{},s)return this.animatedScroll=this.targetScroll=i,this.setScroll(this.scroll),this.reset(),this.preventNextNativeScrollEvent(),this.emit(),a?.(this),this.userData={},void requestAnimationFrame((()=>{this.dispatchScrollendEvent()}));p||(this.targetScroll=i),this.animate.fromTo(this.animatedScroll,i,{duration:n,easing:r,lerp:l,onStart:()=>{o&&(this.isLocked=!0),this.isScrolling="smooth",h?.(this)},onUpdate:(t,i)=>{this.isScrolling="smooth",this.lastVelocity=this.velocity,this.velocity=t-this.animatedScroll,this.direction=Math.sign(this.velocity),this.animatedScroll=t,this.setScroll(this.scroll),p&&(this.targetScroll=t),i||this.emit(),i&&(this.reset(),this.emit(),a?.(this),this.userData={},requestAnimationFrame((()=>{this.dispatchScrollendEvent()})),this.preventNextNativeScrollEvent())}})}}}preventNextNativeScrollEvent(){this._preventNextNativeScrollEvent=!0,requestAnimationFrame((()=>{this._preventNextNativeScrollEvent=!1}))}get rootElement(){return this.options.wrapper===window?document.documentElement:this.options.wrapper}get limit(){return this.options.__experimental__naiveDimensions?this.isHorizontal?this.rootElement.scrollWidth-this.rootElement.clientWidth:this.rootElement.scrollHeight-this.rootElement.clientHeight:this.dimensions.limit[this.isHorizontal?"x":"y"]}get isHorizontal(){return"horizontal"===this.options.orientation}get actualScroll(){const t=this.options.wrapper;return this.isHorizontal?t.scrollX??t.scrollLeft:t.scrollY??t.scrollTop}get scroll(){return this.options.infinite?(t=this.animatedScroll,i=this.limit,(t%i+i)%i):this.animatedScroll;var t,i}get progress(){return 0===this.limit?1:this.scroll/this.limit}get isScrolling(){return this._isScrolling}set isScrolling(t){this._isScrolling!==t&&(this._isScrolling=t,this.updateClassName())}get isStopped(){return this._isStopped}set isStopped(t){this._isStopped!==t&&(this._isStopped=t,this.updateClassName())}get isLocked(){return this._isLocked}set isLocked(t){this._isLocked!==t&&(this._isLocked=t,this.updateClassName())}get isSmooth(){return"smooth"===this.isScrolling}get className(){let t="lenis";return this.isStopped&&(t+=" lenis-stopped"),this.isLocked&&(t+=" lenis-locked"),this.isScrolling&&(t+=" lenis-scrolling"),"smooth"===this.isScrolling&&(t+=" lenis-smooth"),t}updateClassName(){this.cleanUpClassName(),this.rootElement.className=`${this.rootElement.className} ${this.className}`.trim()}cleanUpClassName(){this.rootElement.className=this.rootElement.className.replace(/lenis(-\w+)?/g,"").trim()}};globalThis.Lenis=Lenis,globalThis.Lenis.prototype=Lenis.prototype;//# sourceMappingURL=lenis.min.js.map</script>
+<script>/*!
+ * ScrollToPlugin 3.15.1
+ * https://gsap.com
+ * 
+ * @license Copyright 2026, GreenSock. All rights reserved.
+ * Subject to the terms at https://gsap.com/standard-license.
+ * @author: Jack Doyle, jack@greensock.com
+ */
+
+!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t((e=e||self).window=e.window||{})}(this,function(e){"use strict";function l(){return"undefined"!=typeof window}function m(){return f||l()&&(f=window.gsap)&&f.registerPlugin&&f}function n(e){return"string"==typeof e}function o(e){return"function"==typeof e}function p(e,t){var o="x"===t?"Width":"Height",n="scroll"+o,r="client"+o;return e===T||e===i||e===c?Math.max(i[n],c[n])-(T["inner"+o]||i[r]||c[r]):e[n]-e["offset"+o]}function q(e,t){var o="scroll"+("x"===t?"Left":"Top");return e===T&&(null!=e.pageXOffset?o="page"+t.toUpperCase()+"Offset":e=null!=i[o]?i:c),function(){return e[o]}}function s(e,t){if(!(e=y(e)[0])||!e.getBoundingClientRect)return console.warn("scrollTo target doesn't exist. Using 0")||{x:0,y:0};var o=e.getBoundingClientRect(),n=!t||t===T||t===c,r=n?{top:i.clientTop-(T.pageYOffset||i.scrollTop||c.scrollTop||0),left:i.clientLeft-(T.pageXOffset||i.scrollLeft||c.scrollLeft||0)}:t.getBoundingClientRect(),l={x:o.left-r.left,y:o.top-r.top};return!n&&t&&(l.x+=q(t,"x")(),l.y+=q(t,"y")()),l}function t(e,t,o,r,l){return isNaN(e)||"object"==typeof e?n(e)&&"="===e.charAt(1)?parseFloat(e.substr(2))*("-"===e.charAt(0)?-1:1)+r-l:"max"===e?p(t,o)-l:Math.min(p(t,o),s(e,t)[o]-l):parseFloat(e)-l}function u(){f=m(),l()&&f&&"undefined"!=typeof document&&document.body&&(T=window,c=document.body,i=document.documentElement,y=f.utils.toArray,f.config({autoKillThreshold:7}),h=f.config(),a=1)}var f,a,T,i,c,y,h,v,r={version:"3.15.1",name:"scrollTo",rawVars:1,register:function register(e){f=e,u()},init:function init(e,r,l,i,s){a||u();var p=this,c=f.getProperty(e,"scrollSnapType");p.isWin=e===T,p.target=e,p.tween=l,r=function _clean(e,t,r,l){if(o(e)&&(e=e(t,r,l)),"object"!=typeof e)return n(e)&&"max"!==e&&"="!==e.charAt(1)?{x:e,y:e}:{y:e};if(e.nodeType)return{y:e,x:e};var i,s={};for(i in e)s[i]="onAutoKill"!==i&&o(e[i])?e[i](t,r,l):e[i];return s}(r,i,e,s),p.vars=r,p.autoKill=!!("autoKill"in r?r:h).autoKill,p.getX=q(e,"x"),p.getY=q(e,"y"),p.x=p.xPrev=p.getX(),p.y=p.yPrev=p.getY(),v=v||f.core.globals().ScrollTrigger,"smooth"===f.getProperty(e,"scrollBehavior")&&f.set(e,{scrollBehavior:"auto"}),c&&"none"!==c&&(p.snap=1,p.snapInline=e.style.scrollSnapType,e.style.scrollSnapType="none"),null!=r.x?(p.add(p,"x",p.x,t(r.x,e,"x",p.x,r.offsetX||0),i,s),p._props.push("scrollTo_x")):p.skipX=1,null!=r.y?(p.add(p,"y",p.y,t(r.y,e,"y",p.y,r.offsetY||0),i,s),p._props.push("scrollTo_y")):p.skipY=1},render:function render(e,t){for(var o,n,r,l,i,s=t._pt,c=t.target,u=t.tween,f=t.autoKill,a=t.xPrev,y=t.yPrev,d=t.isWin,g=t.snap,x=t.snapInline;s;)s.r(e,s.d),s=s._next;o=d||!t.skipX?t.getX():a,r=(n=d||!t.skipY?t.getY():y)-y,l=o-a,i=h.autoKillThreshold,t.x<0&&(t.x=0),t.y<0&&(t.y=0),f&&(!t.skipX&&(i<l||l<-i)&&o<p(c,"x")&&(t.skipX=1),!t.skipY&&(i<r||r<-i)&&n<p(c,"y")&&(t.skipY=1),t.skipX&&t.skipY&&(u.kill(),t.vars.onAutoKill&&t.vars.onAutoKill.apply(u,t.vars.onAutoKillParams||[]))),d?T.scrollTo(t.skipX?o:t.x,t.skipY?n:t.y):(t.skipY||(c.scrollTop=t.y),t.skipX||(c.scrollLeft=t.x)),!g||1!==e&&0!==e||(n=c.scrollTop,o=c.scrollLeft,x?c.style.scrollSnapType=x:c.style.removeProperty("scroll-snap-type"),c.scrollTop=n+1,c.scrollLeft=o+1,c.scrollTop=n,c.scrollLeft=o),t.xPrev=t.x,t.yPrev=t.y,v&&v.update()},kill:function kill(e){var t="scrollTo"===e,o=this._props.indexOf(e);return!t&&"scrollTo_x"!==e||(this.skipX=1),!t&&"scrollTo_y"!==e||(this.skipY=1),-1<o&&this._props.splice(o,1),!this._props.length}};r.max=p,r.getOffset=s,r.buildGetter=q,r.config=function(e){for(var t in h||u()||(h=f.config()),e)h[t]=e[t]},m()&&f.registerPlugin(r),e.ScrollToPlugin=r,e.default=r;if (typeof(window)==="undefined"||window!==e){Object.defineProperty(e,"__esModule",{value:!0})} else {delete e.default}});
+
+</script>
 <script>
 const T = (en, es) => ({ en, es });
 const CV = {
@@ -401,7 +413,6 @@ const CV = {
     "Started in datacenter field support, installing storage and running VMware for clients; today I work on how infrastructure changes ship on AWS. Nearly six years across on-prem and cloud taught me to value what others can rely on: pipelines that document themselves and releases that pass audit without extra work. I do my best work side by side with my teammates, and I stay calm when things get demanding.",
     "Empecé en soporte de campo de datacenter, instalando storage y operando VMware para clientes; hoy trabajo en cómo salen los cambios de infraestructura en AWS. Casi seis años entre on-prem y cloud me enseñaron a valorar lo que otros pueden usar con confianza: pipelines que se documentan solos y releases que pasan auditoría sin trabajo extra. Doy lo mejor codo a codo con mis compañeros y mantengo la calma en los momentos exigentes."
   ),
-  hint: T("Pick a skill to see where it was used", "Elegí una skill para ver dónde se usó"),
   place: T("Ciudad Jardín, Buenos Aires, Argentina", "Ciudad Jardín, Buenos Aires, Argentina"),
   cue: T("Scroll", "Deslizá"),
   span: T("2021 – Present", "2021 – Actualidad"),
@@ -417,16 +428,13 @@ const CV = {
     ["certs", T("Background", "Formación")],
     ["contact", T("Contact", "Contacto")]
   ],
-  match: T(
-    (n, off) => `${n} ${n === 1 ? "task" : "tasks"} in experience${off ? `, ${off} out of view (click to go)` : ""}`,
-    (n, off) => `${n} ${n === 1 ? "tarea" : "tareas"} en experiencia${off ? `, ${off} fuera de vista (clic para ir)` : ""}`
-  ),
   palettes: [
-    ["", T("Ink and amber", "Tinta y ámbar"), "#0e1b2c", "#f4ab3c"],
-    ["violet", T("Violet and mint", "Violeta y menta"), "#120f22", "#6ee7c8"],
-    ["forest", T("Forest and lilac", "Bosque y lila"), "#0b1714", "#b8a4ff"],
-    ["slate", T("Slate and cyan", "Pizarra y cian"), "#0d141c", "#56c8f0"],
-    ["petrol", T("Petrol and coral", "Petróleo y coral"), "#0a1a1f", "#ff8a73"]
+    ["", T("Forest and lilac", "Bosque y lila"), "#b8a4ff"],
+    ["violet", T("Violet and mint", "Violeta y menta"), "#6ee7c8"],
+    ["slate", T("Slate and cyan", "Pizarra y cian"), "#56c8f0"],
+    ["ink", T("Ink and amber", "Tinta y ámbar"), "#f4ab3c"],
+    ["petrol", T("Petrol and coral", "Petróleo y coral"), "#ff8a73"],
+    ["matrix", T("Matrix, high contrast", "Matrix, alto contraste"), "#33ff66"]
   ],
   foot: {
     line: T("Thanks for reading. Email is the quickest way to reach me.", "Gracias por leer. El mail es la forma más rápida de contactarme."),
@@ -534,55 +542,55 @@ const sheet = document.getElementById("sheet");
 const bar = document.querySelector(".bar");
 let tl = null, fx = null, lang = "en";
 
-/* Smooth wheel scrolling (Lenis) that settles on section starts after the wheel stops. */
-let lenis = null, snapping = false, lastInput = "", lastDir = 1, snapTimer = 0;
+/* Wheel stepping: each wheel gesture glides to the next stop (a section or a role start).
+   A block taller than the screen is crossed a page at a time. Touch and keys scroll natively. */
+let stepping = false, lastWheel = 0, stepEnd = 0;
 const barH = () => bar.getBoundingClientRect().height + 16;
 const yOf = el => el.getBoundingClientRect().top + window.scrollY;
-function scrollToY(y, duration = 1.1) {
-  if (lenis) lenis.scrollTo(y, { duration, easing: t => 1 - Math.pow(1 - t, 4) });
-  else window.scrollTo({ top: y, behavior: reduced ? "auto" : "smooth" });
+const canStep = () => canMove && !!window.ScrollToPlugin;
+function scrollToY(y, duration = 1) {
+  if (!canStep()) return window.scrollTo({ top: y, behavior: reduced ? "auto" : "smooth" });
+  stepping = true;
+  gsap.to(window, {
+    scrollTo: { y, autoKill: false }, duration, ease: "power3.inOut", overwrite: true,
+    onComplete: () => { stepping = false; stepEnd = performance.now(); }
+  });
 }
 const go = (id, center) => {
   if (id === "top") return scrollToY(0);
   const el = typeof id === "string" ? document.getElementById(id) : id;
   if (el) scrollToY(Math.max(0, yOf(el) - (center ? innerHeight * .35 : barH())));
 };
-function snapPoints() {
-  const max = document.documentElement.scrollHeight - innerHeight;
-  return [0, ...["work", "certs", "contact"].map(id => {
-    const el = document.getElementById(id);
-    return el ? Math.min(max, Math.max(0, yOf(el) - barH())) : null;
-  }).filter(v => v !== null)];
+function stops() {
+  const max = document.documentElement.scrollHeight - innerHeight, off = barH();
+  const ys = [0, max, ...[...document.querySelectorAll("#work, .job:not(:first-child), #certs, #contact")].map(el => yOf(el) - off)]
+    .map(y => Math.round(Math.min(max, Math.max(0, y)))).sort((a, b) => a - b);
+  return ys.filter((y, i) => i === 0 || y - ys[i - 1] > 80);
 }
-function snap() {
-  if (!lenis || snapping || lastInput !== "wheel" || innerWidth < 960) return;
-  const pts = snapPoints(), y = window.scrollY, work = pts[1];
-  let target = null;
-  if (y > 2 && y < work - 2) target = lastDir > 0 ? work : 0;      /* the hero behaves like one page */
-  else {
-    const range = innerHeight * .3;
-    const near = pts.filter(p => lastDir > 0 ? p > y && p - y < range : p < y && y - p < range);
-    if (near.length) target = lastDir > 0 ? Math.min(...near) : Math.max(...near);
-  }
-  if (target === null || Math.abs(target - y) < 3) return;
-  snapping = true;
-  lenis.scrollTo(target, { duration: .9, easing: t => 1 - Math.pow(1 - t, 3), onComplete: () => { snapping = false; } });
+function step(dir) {
+  const pts = stops(), y = Math.round(window.scrollY), vh = innerHeight;
+  let next = dir > 0 ? pts.find(p => p > y + 4) : [...pts].reverse().find(p => p < y - 4);
+  if (next === undefined) return;
+  const heroJump = (dir > 0 && y < pts[1]) || (dir < 0 && next === 0);   /* the hero is one page */
+  if (!heroJump && Math.abs(next - y) > vh * 1.15) next = y + dir * vh * .8;
+  scrollToY(next, Math.min(1.1, .6 + Math.abs(next - y) / 2400));
 }
-function setupLenis() {
-  if (lenis || !canMove || !window.Lenis) return;
-  lenis = new Lenis({ lerp: .09, wheelMultiplier: .9, smoothWheel: true });
-  lenis.on("scroll", () => {
-    if (window.ScrollTrigger) ScrollTrigger.update();
-    if (!snapping) { clearTimeout(snapTimer); snapTimer = setTimeout(snap, 140); }
-  });
-  gsap.ticker.add(t => lenis.raf(t * 1000));
-  gsap.ticker.lagSmoothing(0);
-  addEventListener("wheel", e => { lastInput = "wheel"; if (e.deltaY) lastDir = Math.sign(e.deltaY); snapping = false; }, { passive: true });
-  ["keydown", "touchstart", "pointerdown"].forEach(ev => addEventListener(ev, () => { lastInput = ev; }, { passive: true }));
+function setupStepper() {
+  if (!canStep()) return;
+  gsap.registerPlugin(ScrollToPlugin);
+  addEventListener("wheel", e => {
+    if (innerWidth < 960 || e.ctrlKey || !e.deltaY || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+    e.preventDefault();
+    const now = performance.now(), fresh = now - lastWheel > 220;
+    lastWheel = now;
+    if (stepping) return;
+    if (!fresh && (now - stepEnd < 450 || Math.abs(e.deltaY) < 25)) return; /* ignore trackpad inertia */
+    step(Math.sign(e.deltaY));
+  }, { passive: false });
 }
 
 /* Palettes: main ground, secondary text and accent, chosen from the bar and remembered per viewer. */
-let gridColor = "#f4ab3c";
+let gridColor = "#b8a4ff";
 function applyPalette(id) {
   const ok = CV.palettes.some(p => p[0] === id) ? id : "";
   if (ok) document.documentElement.dataset.palette = ok; else delete document.documentElement.dataset.palette;
@@ -620,17 +628,26 @@ function trace(tag) {
   }
   sheet.classList.toggle("tracing", hits.length > 0);
   const out = hits.filter(li => { const r = li.getBoundingClientRect(); return r.bottom < barH() || r.top > innerHeight; });
-  const m = sheet.querySelector(".match");
-  if (m) m.textContent = hits.length ? CV.match[lang](hits.length, out.length) : "";
   return { hits, out };
 }
 function pick(s) {
+  stopDemo();
   pinned = s && s !== pinned ? s : null;
   const r = trace(pinned);
   if (pinned && r.out.length) go(r.out[0], true);
 }
+/* First time the skills panel shows up, a few skills light their tasks on their own so the link is discovered without instructions. */
+let demoT = [];
+function stopDemo() { demoT.forEach(clearTimeout); demoT = []; }
+function demo() {
+  if (pinned) return;
+  const chips = ["Terraform", "Datadog", "EKS"]
+    .map(n => [...sheet.querySelectorAll(".tags li[data-k]")].find(l => l.textContent === n)).filter(Boolean);
+  chips.forEach((c, i) => demoT.push(setTimeout(() => { if (!pinned) trace(c); }, 900 + i * 1300)));
+  demoT.push(setTimeout(() => { if (!pinned) trace(null); demoT = []; }, 900 + chips.length * 1300));
+}
 const skillAt = e => e.target.closest && e.target.closest(".tags li[data-k]");
-sheet.addEventListener("pointerover", e => { const s = skillAt(e); if (s && e.pointerType === "mouse") trace(s); });
+sheet.addEventListener("pointerover", e => { const s = skillAt(e); if (s && e.pointerType === "mouse") { stopDemo(); trace(s); } });
 sheet.addEventListener("pointerout", e => { if (skillAt(e) && e.pointerType === "mouse") trace(pinned); });
 sheet.addEventListener("click", e => {
   const s = skillAt(e);
@@ -700,6 +717,7 @@ function scrollFx() {
       .from(g.querySelector("h3"), { ...rise, y: 12, duration: .45 })
       .from(g.querySelectorAll(".tags li"), { ...rise, y: 10, scale: .7, duration: .4, ease: "back.out(2.2)", stagger: { each: .035, from: "random" } }, "<+.1");
   });
+  ScrollTrigger.create({ trigger: "#skills", start: "top 70%", once: true, onEnter: demo });
   ["#certs", "#edu", "#langs"].forEach(id => gsap.from(`${id} li`, { ...rise, y: 18, stagger: .09, scrollTrigger: once(id) }));
   gsap.from(".foot-in > *", { ...rise, y: 30, stagger: .1, scrollTrigger: once(".foot", "top 80%") });
 
@@ -758,7 +776,7 @@ function render(next, mode) {
       <aside class="side">
         <div class="skills-rail">
           <section id="skills" class="skills">
-            <div class="sec-head"><h2>${t(CV.h.skills)}</h2><p class="hint">${t(CV.hint)}</p><p class="match" aria-live="polite"></p></div>
+            <div class="sec-head"><h2>${t(CV.h.skills)}</h2></div>
             <div class="groups">${CV.skills.map(g => `<div class="group"><h3>${t(g.name)}</h3><ul class="tags">${g.tags.map(tag).join("")}</ul></div>`).join("")}</div>
           </section>
         </div>
@@ -785,8 +803,8 @@ function render(next, mode) {
     </footer>`;
   document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
   const cur = document.documentElement.dataset.palette || "";
-  document.getElementById("swatches").innerHTML = CV.palettes.map(([id, label, bg, ac]) =>
-    `<button type="button" data-p="${id}" aria-pressed="${id === cur}" title="${t(label)}" aria-label="${t(label)}" style="--sw-bg:${bg};--sw-ac:${ac}"></button>`).join("");
+  document.getElementById("swatches").innerHTML = CV.palettes.map(([id, label, color]) =>
+    `<button type="button" data-p="${id}" aria-pressed="${id === cur}" title="${t(label)}" aria-label="${t(label)}" style="--sw:${color}"></button>`).join("");
   document.querySelectorAll("[data-pdf]").forEach(a => { a.href = `Gianfranco-Casetta-CV-${lang.toUpperCase()}.pdf`; });
   if (!document.querySelector(".bar .pdf").hidden) document.querySelectorAll(".foot .pdf").forEach(a => { a.hidden = false; });
   sheet.querySelector(".head").prepend(gridCanvas);
@@ -807,6 +825,34 @@ function render(next, mode) {
     p.x = p.v > 0 ? -40 : w + 40;
     p.wait = 0;
   };
+  /* Matrix mode: glyph columns fall along the grid instead of packets */
+  const GLYPHS = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ0123456789";
+  const glyph = () => GLYPHS[Math.random() * GLYPHS.length | 0];
+  const drops = [];
+  function rain(dt) {
+    const cols = Math.max(1, Math.floor(w / STEP));
+    while (drops.length < Math.min(70, Math.ceil(cols / 3))) drops.push({ live: false });
+    ctx.font = `500 ${STEP - 5}px "IBM Plex Mono", monospace`;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    for (const d of drops) {
+      if (!d.live || d.y - d.len * STEP > h) {
+        Object.assign(d, { live: true, x: OFF + STEP * (Math.random() * cols | 0), y: -Math.random() * h * .6,
+          v: 60 + Math.random() * 110, len: 8 + (Math.random() * 14 | 0) });
+        d.g = Array.from({ length: d.len }, glyph);
+      }
+      d.y += d.v * dt;
+      if (Math.random() < .06) d.g[Math.random() * d.len | 0] = glyph();
+      const head = Math.floor(d.y / STEP);
+      for (let k = 0; k < d.len; k++) {
+        const cy = OFF + (head - k) * STEP;
+        if (cy < -STEP || cy > h + STEP) continue;
+        ctx.globalAlpha = k === 0 ? .9 : .5 * (1 - k / d.len);
+        ctx.fillStyle = k === 0 ? "#dcffe4" : gridColor;
+        ctx.fillText(d.g[k], d.x, cy);
+      }
+    }
+    ctx.fillStyle = gridColor;
+  }
   function size() {
     const r = gridCanvas.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
     if (!r.width) return;
@@ -844,7 +890,8 @@ function render(next, mode) {
         ctx.beginPath(); ctx.arc(x, y, 1 + k * 1.4, 0, 6.2832); ctx.fill();
       }
     }
-    for (const p of packets) {
+    if (document.documentElement.dataset.palette === "matrix") rain(dt);
+    else for (const p of packets) {
       if (p.wait > 0) { p.wait -= dt; if (p.wait <= 0) spawn(p); continue; }
       p.x += p.v * dt;
       if (p.x < -60 || p.x > w + 60) { p.wait = 1 + Math.random() * 4; continue; }
@@ -890,7 +937,7 @@ window.addEventListener("hashchange", () => { if (/^#(en|es)$/.test(location.has
   if (p === undefined) { try { p = localStorage.getItem("cv-palette") || ""; } catch (e) { p = ""; } }
   applyPalette(p);
 })();
-setupLenis();
+setupStepper();
 render(fromHash(), "intro");
 </script>
 </body>

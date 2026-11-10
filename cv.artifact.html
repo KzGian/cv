@@ -1,6 +1,6 @@
 <title>Gianfranco Casetta CV</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;700&display=swap">
 <style>
 /* Two layouts from one document.
    Print (base rules): one A4 sheet, name header over a career timeline beside a reference column.
@@ -10,13 +10,13 @@
 :root {
   color-scheme: dark;
   /* Palette: main ground (ink, sheet, raise, line), secondary text (paper, mist), accent */
-  --ink: #0e1b2c;        /* page ground, deep ink blue */
-  --sheet: #13243a;      /* raised surface */
-  --raise: #1a3049;      /* chips */
-  --line: #2b4563;       /* rules and borders */
-  --paper: #efe8d8;      /* primary text, warm ivory */
-  --mist: #a9b9cb;       /* secondary text */
-  --accent: #f4ab3c;     /* accent */
+  --ink: #0b1714;        /* page ground, deep forest green */
+  --sheet: #10201c;      /* raised surface */
+  --raise: #172b26;      /* chips */
+  --line: #24423a;       /* rules and borders */
+  --paper: #e7efe9;      /* primary text */
+  --mist: #9db5ab;       /* secondary text */
+  --accent: #b8a4ff;     /* accent, lilac */
   --accent-soft: color-mix(in srgb, var(--accent) 15%, transparent);
   --display: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", sans-serif;
   --body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -24,9 +24,16 @@
 }
 /* Alternative palettes, all dark and cool, picked from the bar */
 :root[data-palette="violet"] { --ink: #120f22; --sheet: #19152e; --raise: #221d3d; --line: #352d59; --paper: #eeebf7; --mist: #aba4c8; --accent: #6ee7c8; }
-:root[data-palette="forest"] { --ink: #0b1714; --sheet: #10201c; --raise: #172b26; --line: #24423a; --paper: #e7efe9; --mist: #9db5ab; --accent: #b8a4ff; }
+:root[data-palette="ink"]    { --ink: #0e1b2c; --sheet: #13243a; --raise: #1a3049; --line: #2b4563; --paper: #efe8d8; --mist: #a9b9cb; --accent: #f4ab3c; }
 :root[data-palette="slate"]  { --ink: #0d141c; --sheet: #121c27; --raise: #192634; --line: #283a4e; --paper: #e7edf3; --mist: #9aaec2; --accent: #56c8f0; }
 :root[data-palette="petrol"] { --ink: #0a1a1f; --sheet: #0f242a; --raise: #163037; --line: #22464f; --paper: #e9f0ef; --mist: #9cb7b6; --accent: #ff8a73; }
+/* High-contrast terminal mode: black and phosphor green, monospace headings */
+:root[data-palette="matrix"] {
+  --ink: #000; --sheet: #020702; --raise: #061206; --line: #12401c; --paper: #dcffe4; --mist: #5fdc7e; --accent: #33ff66;
+  --display: "IBM Plex Mono", Consolas, "Courier New", monospace;
+}
+:root[data-palette="matrix"] .name { letter-spacing: -.06em; }
+:root[data-palette="matrix"] .tasks strong { color: var(--accent); }
 * { box-sizing: border-box; }
 body {
   background: var(--ink);
@@ -48,7 +55,7 @@ button { font: inherit; }
 /* Screen-only pieces are hidden in the base (print) layout */
 .progress, .who, .nav, .cue, .sub, .foot { display: none; }
 .hero-in, .sec-head, .groups, .skills-rail { display: contents; }
-.match, .swatches { display: none; }
+.swatches { display: none; }
 
 .bar {
   width: 100%; max-width: 210mm; margin: 0 auto 12px;
@@ -151,7 +158,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
 
 /* ---------- Screen: a site that scales with the monitor ---------- */
 @media screen {
-  html { font-size: clamp(15px, calc(11.7px + .241vw), 20px); scroll-behavior: smooth; }
+  html { font-size: clamp(15px, calc(11.7px + .241vw), 20px); }
   :root {
     --gl: max(clamp(16px, 4vw, 4.5rem), env(safe-area-inset-left, 0px));
     --gr: max(clamp(16px, 4vw, 4.5rem), env(safe-area-inset-right, 0px));
@@ -191,20 +198,15 @@ section { display: flex; flex-direction: column; gap: 12px; }
   .lang button, .pdf:not([hidden]) { padding: .45rem .85rem; }
   .lang, .pdf:not([hidden]) { border-radius: 99px; }
   .pdf:not([hidden]):hover { border-color: var(--accent); }
-  .swatches { display: flex; gap: .35rem; padding: 0 .3rem; }
+  /* Palette picker: one accent dot per palette, all the same size; the active one gets a ring */
+  .swatches { display: flex; align-items: center; gap: .7rem; padding: 0 .5rem; }
   .swatches button {
-    width: 1.35rem; height: 1.35rem; border-radius: 50%; padding: 0; cursor: pointer;
-    border: 2px solid transparent; outline: 1px solid var(--line); outline-offset: 1px;
-    background: linear-gradient(135deg, var(--sw-bg) 50%, var(--sw-ac) 50%);
-    transition: transform .2s;
+    flex: none; width: .95rem; height: .95rem; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+    background: var(--sw); box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 18%, transparent);
+    transition: transform .2s, box-shadow .2s;
   }
-  .swatches button:hover { transform: scale(1.12); }
-  .swatches button[aria-pressed="true"] { outline: 2px solid var(--accent); }
-
-  /* Lenis smooth scrolling */
-  html.lenis, html.lenis body { height: auto; }
-  .lenis.lenis-smooth { scroll-behavior: auto !important; }
-  .lenis.lenis-stopped { overflow: hidden; }
+  .swatches button:hover { transform: scale(1.18); }
+  .swatches button[aria-pressed="true"] { box-shadow: 0 0 0 2.5px var(--ink), 0 0 0 4px var(--paper); }
 
   /* Sheet becomes the page */
   .sheet { max-width: none; min-height: 0; margin: 0; border: 0; background: transparent; display: block; }
@@ -242,8 +244,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
   section { gap: 1.6rem; scroll-margin-top: 6rem; }
   .sec-head { display: flex; flex-direction: column; gap: .9rem; }
   h2 { font-size: clamp(1.8rem, 2.7vw, 3.3rem); line-height: 1.05; letter-spacing: -.015em; padding: 0; border: 0; text-wrap: balance; }
-  .sub, .hint, .match { display: block; margin: 0; font: 400 .85rem/1.5 var(--mono); color: var(--mist); }
-  .match { color: var(--accent); min-height: 1.5em; }
+  .sub { display: block; margin: 0; font: 400 .85rem/1.5 var(--mono); color: var(--mist); }
   #work { order: 1; grid-column: 1 / span 8; gap: 2.4rem; }
   .skills-rail { display: block; order: 2; grid-column: 9 / -1; align-self: stretch; }
   #skills { position: sticky; top: 5.5rem; gap: 1.6rem; padding: 1.6rem; background: var(--sheet); border: 1px solid var(--line); border-radius: .9rem; }
@@ -344,7 +345,7 @@ section { display: flex; flex-direction: column; gap: 12px; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrambleTextPlugin.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollToPlugin.min.js"></script>
 <script>
 const T = (en, es) => ({ en, es });
 const CV = {
@@ -354,7 +355,6 @@ const CV = {
     "Started in datacenter field support, installing storage and running VMware for clients; today I work on how infrastructure changes ship on AWS. Nearly six years across on-prem and cloud taught me to value what others can rely on: pipelines that document themselves and releases that pass audit without extra work. I do my best work side by side with my teammates, and I stay calm when things get demanding.",
     "Empecé en soporte de campo de datacenter, instalando storage y operando VMware para clientes; hoy trabajo en cómo salen los cambios de infraestructura en AWS. Casi seis años entre on-prem y cloud me enseñaron a valorar lo que otros pueden usar con confianza: pipelines que se documentan solos y releases que pasan auditoría sin trabajo extra. Doy lo mejor codo a codo con mis compañeros y mantengo la calma en los momentos exigentes."
   ),
-  hint: T("Pick a skill to see where it was used", "Elegí una skill para ver dónde se usó"),
   place: T("Ciudad Jardín, Buenos Aires, Argentina", "Ciudad Jardín, Buenos Aires, Argentina"),
   cue: T("Scroll", "Deslizá"),
   span: T("2021 – Present", "2021 – Actualidad"),
@@ -370,16 +370,13 @@ const CV = {
     ["certs", T("Background", "Formación")],
     ["contact", T("Contact", "Contacto")]
   ],
-  match: T(
-    (n, off) => `${n} ${n === 1 ? "task" : "tasks"} in experience${off ? `, ${off} out of view (click to go)` : ""}`,
-    (n, off) => `${n} ${n === 1 ? "tarea" : "tareas"} en experiencia${off ? `, ${off} fuera de vista (clic para ir)` : ""}`
-  ),
   palettes: [
-    ["", T("Ink and amber", "Tinta y ámbar"), "#0e1b2c", "#f4ab3c"],
-    ["violet", T("Violet and mint", "Violeta y menta"), "#120f22", "#6ee7c8"],
-    ["forest", T("Forest and lilac", "Bosque y lila"), "#0b1714", "#b8a4ff"],
-    ["slate", T("Slate and cyan", "Pizarra y cian"), "#0d141c", "#56c8f0"],
-    ["petrol", T("Petrol and coral", "Petróleo y coral"), "#0a1a1f", "#ff8a73"]
+    ["", T("Forest and lilac", "Bosque y lila"), "#b8a4ff"],
+    ["violet", T("Violet and mint", "Violeta y menta"), "#6ee7c8"],
+    ["slate", T("Slate and cyan", "Pizarra y cian"), "#56c8f0"],
+    ["ink", T("Ink and amber", "Tinta y ámbar"), "#f4ab3c"],
+    ["petrol", T("Petrol and coral", "Petróleo y coral"), "#ff8a73"],
+    ["matrix", T("Matrix, high contrast", "Matrix, alto contraste"), "#33ff66"]
   ],
   foot: {
     line: T("Thanks for reading. Email is the quickest way to reach me.", "Gracias por leer. El mail es la forma más rápida de contactarme."),
@@ -487,55 +484,55 @@ const sheet = document.getElementById("sheet");
 const bar = document.querySelector(".bar");
 let tl = null, fx = null, lang = "en";
 
-/* Smooth wheel scrolling (Lenis) that settles on section starts after the wheel stops. */
-let lenis = null, snapping = false, lastInput = "", lastDir = 1, snapTimer = 0;
+/* Wheel stepping: each wheel gesture glides to the next stop (a section or a role start).
+   A block taller than the screen is crossed a page at a time. Touch and keys scroll natively. */
+let stepping = false, lastWheel = 0, stepEnd = 0;
 const barH = () => bar.getBoundingClientRect().height + 16;
 const yOf = el => el.getBoundingClientRect().top + window.scrollY;
-function scrollToY(y, duration = 1.1) {
-  if (lenis) lenis.scrollTo(y, { duration, easing: t => 1 - Math.pow(1 - t, 4) });
-  else window.scrollTo({ top: y, behavior: reduced ? "auto" : "smooth" });
+const canStep = () => canMove && !!window.ScrollToPlugin;
+function scrollToY(y, duration = 1) {
+  if (!canStep()) return window.scrollTo({ top: y, behavior: reduced ? "auto" : "smooth" });
+  stepping = true;
+  gsap.to(window, {
+    scrollTo: { y, autoKill: false }, duration, ease: "power3.inOut", overwrite: true,
+    onComplete: () => { stepping = false; stepEnd = performance.now(); }
+  });
 }
 const go = (id, center) => {
   if (id === "top") return scrollToY(0);
   const el = typeof id === "string" ? document.getElementById(id) : id;
   if (el) scrollToY(Math.max(0, yOf(el) - (center ? innerHeight * .35 : barH())));
 };
-function snapPoints() {
-  const max = document.documentElement.scrollHeight - innerHeight;
-  return [0, ...["work", "certs", "contact"].map(id => {
-    const el = document.getElementById(id);
-    return el ? Math.min(max, Math.max(0, yOf(el) - barH())) : null;
-  }).filter(v => v !== null)];
+function stops() {
+  const max = document.documentElement.scrollHeight - innerHeight, off = barH();
+  const ys = [0, max, ...[...document.querySelectorAll("#work, .job:not(:first-child), #certs, #contact")].map(el => yOf(el) - off)]
+    .map(y => Math.round(Math.min(max, Math.max(0, y)))).sort((a, b) => a - b);
+  return ys.filter((y, i) => i === 0 || y - ys[i - 1] > 80);
 }
-function snap() {
-  if (!lenis || snapping || lastInput !== "wheel" || innerWidth < 960) return;
-  const pts = snapPoints(), y = window.scrollY, work = pts[1];
-  let target = null;
-  if (y > 2 && y < work - 2) target = lastDir > 0 ? work : 0;      /* the hero behaves like one page */
-  else {
-    const range = innerHeight * .3;
-    const near = pts.filter(p => lastDir > 0 ? p > y && p - y < range : p < y && y - p < range);
-    if (near.length) target = lastDir > 0 ? Math.min(...near) : Math.max(...near);
-  }
-  if (target === null || Math.abs(target - y) < 3) return;
-  snapping = true;
-  lenis.scrollTo(target, { duration: .9, easing: t => 1 - Math.pow(1 - t, 3), onComplete: () => { snapping = false; } });
+function step(dir) {
+  const pts = stops(), y = Math.round(window.scrollY), vh = innerHeight;
+  let next = dir > 0 ? pts.find(p => p > y + 4) : [...pts].reverse().find(p => p < y - 4);
+  if (next === undefined) return;
+  const heroJump = (dir > 0 && y < pts[1]) || (dir < 0 && next === 0);   /* the hero is one page */
+  if (!heroJump && Math.abs(next - y) > vh * 1.15) next = y + dir * vh * .8;
+  scrollToY(next, Math.min(1.1, .6 + Math.abs(next - y) / 2400));
 }
-function setupLenis() {
-  if (lenis || !canMove || !window.Lenis) return;
-  lenis = new Lenis({ lerp: .09, wheelMultiplier: .9, smoothWheel: true });
-  lenis.on("scroll", () => {
-    if (window.ScrollTrigger) ScrollTrigger.update();
-    if (!snapping) { clearTimeout(snapTimer); snapTimer = setTimeout(snap, 140); }
-  });
-  gsap.ticker.add(t => lenis.raf(t * 1000));
-  gsap.ticker.lagSmoothing(0);
-  addEventListener("wheel", e => { lastInput = "wheel"; if (e.deltaY) lastDir = Math.sign(e.deltaY); snapping = false; }, { passive: true });
-  ["keydown", "touchstart", "pointerdown"].forEach(ev => addEventListener(ev, () => { lastInput = ev; }, { passive: true }));
+function setupStepper() {
+  if (!canStep()) return;
+  gsap.registerPlugin(ScrollToPlugin);
+  addEventListener("wheel", e => {
+    if (innerWidth < 960 || e.ctrlKey || !e.deltaY || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+    e.preventDefault();
+    const now = performance.now(), fresh = now - lastWheel > 220;
+    lastWheel = now;
+    if (stepping) return;
+    if (!fresh && (now - stepEnd < 450 || Math.abs(e.deltaY) < 25)) return; /* ignore trackpad inertia */
+    step(Math.sign(e.deltaY));
+  }, { passive: false });
 }
 
 /* Palettes: main ground, secondary text and accent, chosen from the bar and remembered per viewer. */
-let gridColor = "#f4ab3c";
+let gridColor = "#b8a4ff";
 function applyPalette(id) {
   const ok = CV.palettes.some(p => p[0] === id) ? id : "";
   if (ok) document.documentElement.dataset.palette = ok; else delete document.documentElement.dataset.palette;
@@ -573,17 +570,26 @@ function trace(tag) {
   }
   sheet.classList.toggle("tracing", hits.length > 0);
   const out = hits.filter(li => { const r = li.getBoundingClientRect(); return r.bottom < barH() || r.top > innerHeight; });
-  const m = sheet.querySelector(".match");
-  if (m) m.textContent = hits.length ? CV.match[lang](hits.length, out.length) : "";
   return { hits, out };
 }
 function pick(s) {
+  stopDemo();
   pinned = s && s !== pinned ? s : null;
   const r = trace(pinned);
   if (pinned && r.out.length) go(r.out[0], true);
 }
+/* First time the skills panel shows up, a few skills light their tasks on their own so the link is discovered without instructions. */
+let demoT = [];
+function stopDemo() { demoT.forEach(clearTimeout); demoT = []; }
+function demo() {
+  if (pinned) return;
+  const chips = ["Terraform", "Datadog", "EKS"]
+    .map(n => [...sheet.querySelectorAll(".tags li[data-k]")].find(l => l.textContent === n)).filter(Boolean);
+  chips.forEach((c, i) => demoT.push(setTimeout(() => { if (!pinned) trace(c); }, 900 + i * 1300)));
+  demoT.push(setTimeout(() => { if (!pinned) trace(null); demoT = []; }, 900 + chips.length * 1300));
+}
 const skillAt = e => e.target.closest && e.target.closest(".tags li[data-k]");
-sheet.addEventListener("pointerover", e => { const s = skillAt(e); if (s && e.pointerType === "mouse") trace(s); });
+sheet.addEventListener("pointerover", e => { const s = skillAt(e); if (s && e.pointerType === "mouse") { stopDemo(); trace(s); } });
 sheet.addEventListener("pointerout", e => { if (skillAt(e) && e.pointerType === "mouse") trace(pinned); });
 sheet.addEventListener("click", e => {
   const s = skillAt(e);
@@ -653,6 +659,7 @@ function scrollFx() {
       .from(g.querySelector("h3"), { ...rise, y: 12, duration: .45 })
       .from(g.querySelectorAll(".tags li"), { ...rise, y: 10, scale: .7, duration: .4, ease: "back.out(2.2)", stagger: { each: .035, from: "random" } }, "<+.1");
   });
+  ScrollTrigger.create({ trigger: "#skills", start: "top 70%", once: true, onEnter: demo });
   ["#certs", "#edu", "#langs"].forEach(id => gsap.from(`${id} li`, { ...rise, y: 18, stagger: .09, scrollTrigger: once(id) }));
   gsap.from(".foot-in > *", { ...rise, y: 30, stagger: .1, scrollTrigger: once(".foot", "top 80%") });
 
@@ -711,7 +718,7 @@ function render(next, mode) {
       <aside class="side">
         <div class="skills-rail">
           <section id="skills" class="skills">
-            <div class="sec-head"><h2>${t(CV.h.skills)}</h2><p class="hint">${t(CV.hint)}</p><p class="match" aria-live="polite"></p></div>
+            <div class="sec-head"><h2>${t(CV.h.skills)}</h2></div>
             <div class="groups">${CV.skills.map(g => `<div class="group"><h3>${t(g.name)}</h3><ul class="tags">${g.tags.map(tag).join("")}</ul></div>`).join("")}</div>
           </section>
         </div>
@@ -738,8 +745,8 @@ function render(next, mode) {
     </footer>`;
   document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
   const cur = document.documentElement.dataset.palette || "";
-  document.getElementById("swatches").innerHTML = CV.palettes.map(([id, label, bg, ac]) =>
-    `<button type="button" data-p="${id}" aria-pressed="${id === cur}" title="${t(label)}" aria-label="${t(label)}" style="--sw-bg:${bg};--sw-ac:${ac}"></button>`).join("");
+  document.getElementById("swatches").innerHTML = CV.palettes.map(([id, label, color]) =>
+    `<button type="button" data-p="${id}" aria-pressed="${id === cur}" title="${t(label)}" aria-label="${t(label)}" style="--sw:${color}"></button>`).join("");
   document.querySelectorAll("[data-pdf]").forEach(a => { a.href = `Gianfranco-Casetta-CV-${lang.toUpperCase()}.pdf`; });
   if (!document.querySelector(".bar .pdf").hidden) document.querySelectorAll(".foot .pdf").forEach(a => { a.hidden = false; });
   sheet.querySelector(".head").prepend(gridCanvas);
@@ -760,6 +767,34 @@ function render(next, mode) {
     p.x = p.v > 0 ? -40 : w + 40;
     p.wait = 0;
   };
+  /* Matrix mode: glyph columns fall along the grid instead of packets */
+  const GLYPHS = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ0123456789";
+  const glyph = () => GLYPHS[Math.random() * GLYPHS.length | 0];
+  const drops = [];
+  function rain(dt) {
+    const cols = Math.max(1, Math.floor(w / STEP));
+    while (drops.length < Math.min(70, Math.ceil(cols / 3))) drops.push({ live: false });
+    ctx.font = `500 ${STEP - 5}px "IBM Plex Mono", monospace`;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    for (const d of drops) {
+      if (!d.live || d.y - d.len * STEP > h) {
+        Object.assign(d, { live: true, x: OFF + STEP * (Math.random() * cols | 0), y: -Math.random() * h * .6,
+          v: 60 + Math.random() * 110, len: 8 + (Math.random() * 14 | 0) });
+        d.g = Array.from({ length: d.len }, glyph);
+      }
+      d.y += d.v * dt;
+      if (Math.random() < .06) d.g[Math.random() * d.len | 0] = glyph();
+      const head = Math.floor(d.y / STEP);
+      for (let k = 0; k < d.len; k++) {
+        const cy = OFF + (head - k) * STEP;
+        if (cy < -STEP || cy > h + STEP) continue;
+        ctx.globalAlpha = k === 0 ? .9 : .5 * (1 - k / d.len);
+        ctx.fillStyle = k === 0 ? "#dcffe4" : gridColor;
+        ctx.fillText(d.g[k], d.x, cy);
+      }
+    }
+    ctx.fillStyle = gridColor;
+  }
   function size() {
     const r = gridCanvas.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
     if (!r.width) return;
@@ -797,7 +832,8 @@ function render(next, mode) {
         ctx.beginPath(); ctx.arc(x, y, 1 + k * 1.4, 0, 6.2832); ctx.fill();
       }
     }
-    for (const p of packets) {
+    if (document.documentElement.dataset.palette === "matrix") rain(dt);
+    else for (const p of packets) {
       if (p.wait > 0) { p.wait -= dt; if (p.wait <= 0) spawn(p); continue; }
       p.x += p.v * dt;
       if (p.x < -60 || p.x > w + 60) { p.wait = 1 + Math.random() * 4; continue; }
@@ -843,6 +879,6 @@ window.addEventListener("hashchange", () => { if (/^#(en|es)$/.test(location.has
   if (p === undefined) { try { p = localStorage.getItem("cv-palette") || ""; } catch (e) { p = ""; } }
   applyPalette(p);
 })();
-setupLenis();
+setupStepper();
 render(fromHash(), "intro");
 </script>
