@@ -1,0 +1,506 @@
+<title>Gianfranco Casetta CV</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one A4 sheet. Big name header on a blueprint grid, then a wide
+   career timeline (left) beside a narrow reference column (right). Motion is
+   one load sequence plus a live grid in the header that follows the pointer. */
+:root {
+  color-scheme: dark;
+  --ink: #0e1b2c;        /* page ground, deep ink blue */
+  --sheet: #13243a;      /* the sheet itself */
+  --raise: #1a3049;      /* chips, strip */
+  --line: #2b4563;       /* rules and borders */
+  --paper: #efe8d8;      /* primary text, warm ivory */
+  --mist: #a9b9cb;       /* secondary text */
+  --amber: #f4ab3c;      /* accent */
+  --amber-soft: #f4ab3c24;
+  --display: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font: 400 12.5px/1.45 var(--body);
+  padding-block: 20px 32px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--amber); }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 3px; }
+ul { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p { margin: 0; }
+
+.bar {
+  width: 100%; max-width: 210mm; margin: 0 auto 12px;
+  display: flex; justify-content: flex-end; align-items: center; gap: 10px;
+  font: 500 11px var(--mono); color: var(--mist);
+}
+.lang { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.lang button {
+  font: inherit; color: var(--mist); background: transparent; border: 0;
+  padding: 6px 12px; cursor: pointer;
+}
+.lang button[aria-pressed="true"] { background: var(--amber); color: var(--ink); }
+.pdf:not([hidden]) { display: inline-block; border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; color: var(--paper); }
+
+.sheet {
+  width: 100%; max-width: 210mm; min-height: 297mm; margin: 0 auto;
+  background: var(--sheet); border: 1px solid var(--line);
+  display: flex; flex-direction: column;
+}
+
+/* Header */
+.head {
+  padding: 22px 40px 14px;
+  background-image: radial-gradient(var(--line) 1px, transparent 1px);
+  background-size: 18px 18px; background-position: 4px 4px;
+  border-bottom: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 14px;
+  position: relative; overflow: hidden; flex: none;
+}
+.head > * { position: relative; }
+.head > canvas.grid { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.name {
+  font: 800 50px/0.95 var(--display); letter-spacing: -0.02em; text-wrap: balance;
+}
+.name .w { display: inline-block; overflow: hidden; padding: .08em 0 .12em; margin: -.08em 0 -.12em; vertical-align: top; }
+.name .c { display: inline-block; }
+.name.live .w { overflow: visible; }
+.name.live .c {
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), color .35s;
+  transform: translateY(calc(var(--k, 0) * -7px));
+  color: color-mix(in srgb, var(--amber) calc(var(--k, 0) * 100%), var(--paper));
+}
+.role { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.role b { font: 700 19px/1.2 var(--display); color: var(--amber); }
+.role span { font: 500 12px var(--mono); color: var(--mist); }
+.about { max-width: 78ch; font-size: 13px; color: var(--paper); }
+.contact { display: flex; flex-wrap: wrap; gap: 6px 22px; font: 400 11.5px var(--mono); color: var(--mist); }
+.contact li { display: flex; gap: 7px; align-items: center; }
+.contact svg { width: 13px; height: 13px; flex: none; stroke: var(--amber); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.contact a { color: var(--paper); }
+
+/* Body grid */
+.cols { flex: 1; display: grid; grid-template-columns: minmax(0, 1.72fr) minmax(0, 1fr); }
+.main { padding: 14px 28px 12px 40px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.side { padding: 14px 34px 12px 26px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+h2 {
+  font: 700 17px/1.2 var(--display); color: var(--amber);
+  padding-bottom: 7px; border-bottom: 1px solid var(--line);
+}
+section { display: flex; flex-direction: column; gap: 12px; }
+.cols section { position: relative; } /* keeps exported PDF text in reading order */
+
+/* Timeline */
+.jobs { --rail: 1; position: relative; display: flex; flex-direction: column; gap: 12px; margin-left: 4px; }
+.jobs::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--line);
+  transform-origin: top; transform: scaleY(var(--rail));
+}
+.job { --dot: 1; position: relative; padding-left: 21px; display: flex; flex-direction: column; gap: 7px; }
+.job::before {
+  content: ""; position: absolute; left: -4px; top: 5px; width: 9px; height: 9px;
+  border-radius: 50%; background: var(--sheet); border: 1.5px solid var(--mist);
+  transform: scale(var(--dot)); z-index: 1;
+}
+.job.now::before { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 4px var(--amber-soft); }
+.job.now::after {
+  content: ""; position: absolute; left: -4px; top: 5px; width: 9px; height: 9px;
+  border-radius: 50%; border: 1px solid var(--amber); animation: ping 2.4s ease-out infinite;
+}
+@keyframes ping { 0% { transform: scale(1); opacity: .8; } 70%, 100% { transform: scale(3.2); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .job.now::after { animation: none; opacity: 0; } }
+.job h3 { font: 700 15px/1.25 var(--display); }
+.meta { display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: baseline; }
+.meta b { font-weight: 600; font-size: 13px; }
+.meta span { font: 400 11px var(--mono); color: var(--mist); }
+.tasks { display: flex; flex-direction: column; gap: 4px; }
+.tasks li { position: relative; padding-left: 14px; transition: opacity .25s; }
+.tasks li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 6px; height: 1.5px; background: var(--amber); transition: width .25s, left .25s; }
+/* Skill tracing: picking a skill lights up the work where it was used */
+.sheet.tracing .tasks li { opacity: .3; }
+.sheet.tracing .tasks li.hit { opacity: 1; }
+.sheet.tracing .tasks li.hit::before { width: 10px; left: -4px; }
+.tasks strong { font-weight: 600; color: #fff; }
+
+/* Side column */
+.group { display: flex; flex-direction: column; gap: 6px; }
+.group h3 { font: 600 12px var(--body); color: var(--paper); }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tags li { font: 400 10.5px/1.2 var(--mono); color: var(--paper); background: var(--raise); border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; transition: border-color .2s, color .2s; }
+.tags li:hover { border-color: var(--amber); color: var(--amber); }
+.tags li[data-k] { cursor: pointer; }
+.tags li.on { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+.hint { font: 400 10px/1.3 var(--mono); color: var(--mist); margin-top: -4px; }
+.skills { gap: 13px; }
+.list { display: flex; flex-direction: column; gap: 10px; }
+.list b { display: block; font-weight: 600; line-height: 1.3; }
+.list span { display: block; font: 400 10.5px var(--mono); color: var(--mist); margin-top: 2px; }
+.langs { display: flex; flex-direction: column; gap: 5px; }
+.langs li { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.langs b { font-weight: 600; }
+.langs span { font: 400 10.5px var(--mono); color: var(--amber); text-align: right; }
+
+@media (max-width: 700px) {
+  .cols { grid-template-columns: 1fr; }
+  .head { padding: 26px 20px 20px; }
+  .name { font-size: 40px; }
+  .main { padding: 22px 20px; }
+  .side { padding: 22px 20px 28px; border-left: 0; border-top: 1px solid var(--line); }
+}
+@page { size: A4; margin: 0; }
+@media print {
+  :root { padding: 0 !important; }
+  body { padding: 0; background: var(--sheet); }
+  .bar, .hint, .head > canvas.grid, .job.now::after { display: none; }
+  .sheet { border: 0; max-width: none; width: 210mm; height: 297mm; min-height: 0; overflow: hidden; }
+}
+</style>
+
+<div class="bar">
+  <a class="pdf" id="pdf" href="Gianfranco-Casetta-CV-EN.pdf" target="_blank" rel="noopener" hidden>PDF</a>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" id="btn-en" data-lang="en" aria-pressed="true">EN</button>
+    <button type="button" id="btn-es" data-lang="es" aria-pressed="false">ES</button>
+  </div>
+</div>
+<main class="sheet" id="sheet"></main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrambleTextPlugin.min.js"></script>
+<script>
+const T = (en, es) => ({ en, es });
+const CV = {
+  role: "Infrastructure Specialist",
+  focus: T("DevOps and Cloud Engineering on AWS", "DevOps y Cloud Engineering en AWS"),
+  about: T(
+    "I started out in datacenter field support, installing storage and running VMware environments, and today I automate how infrastructure changes ship on AWS. Nearly six years across on-prem and cloud taught me to build things others can trust: pipelines that document themselves and releases that pass audit without extra work. I do my best work backing my team and staying calm under pressure.",
+    "Arranqué en soporte de campo de datacenter, instalando storage y operando entornos VMware, y hoy automatizo cómo salen los cambios de infraestructura en AWS. Casi seis años entre on-prem y cloud me enseñaron a construir cosas confiables: pipelines que se documentan solos y releases que pasan auditoría sin trabajo extra. Doy lo mejor acompañando a mi equipo y manteniendo la calma bajo presión."
+  ),
+  hint: T("Pick a skill to see where I used it", "Elegí una skill para ver dónde la usé"),
+  place: T("Ciudad Jardín, Buenos Aires, Argentina", "Ciudad Jardín, Buenos Aires, Argentina"),
+  h: {
+    work: T("Work experience", "Experiencia laboral"),
+    skills: T("Skills", "Skills"),
+    certs: T("Certifications", "Certificaciones"),
+    langs: T("Languages", "Idiomas"),
+    edu: T("Education", "Educación")
+  },
+  jobs: [
+    {
+      now: true,
+      title: T("Infrastructure Specialist", "Infrastructure Specialist"),
+      org: "Prex",
+      when: T("May 2024 – Present", "May 2024 – Actualidad"),
+      where: "CABA, Argentina",
+      tasks: [
+        T("Work across 50+ infrastructure repos, one stack per country, and built and own the shared <strong>CI/CD</strong> repo and its backend (Bitbucket Pipelines for Python, SageMaker and Terraform).",
+          "Trabajo sobre más de 50 repos de infraestructura, un stack por país, y construí y mantengo el repo compartido de <strong>CI/CD</strong> y su backend (Bitbucket Pipelines para Python, SageMaker y Terraform)."),
+        T("Automated Terraform <strong>change management</strong> with security and audit checks: plans and applies are logged on the Jira ticket and approvals sync with the pull request, so documenting and approving a change takes no manual work.",
+          "Automaticé la <strong>gestión de cambios</strong> de Terraform con chequeos de seguridad y auditoría: cada plan y apply queda en el ticket de Jira y las aprobaciones se sincronizan con el pull request, sin pasos manuales."),
+        T("Built the infrastructure and release flow for a real-time <strong>fraud scoring</strong> model on SageMaker, now heading to production.",
+          "Armé la infraestructura y el flujo de release de un modelo de <strong>scoring de fraude</strong> en tiempo real sobre SageMaker, hoy camino a producción."),
+        T("Automated maintenance with <strong>Rundeck and Ansible</strong>: ALB traffic shifting for updates, instance snapshots and unattended Ubuntu patching.",
+          "Automaticé mantenimiento con <strong>Rundeck y Ansible</strong>: cambio de tráfico en ALBs, snapshots y parcheo desatendido de Ubuntu."),
+        T("Taking part in the move of services from EC2 hosts to <strong>EKS</strong> pods, alongside the SRE team.",
+          "Participo en la migración de servicios de hosts EC2 a pods en <strong>EKS</strong>, junto al equipo de SRE."),
+        T("Operate core AWS (EC2, ALB, IAM, VPC, CloudWatch) and a Windows Server domain controller, troubleshoot in <strong>Datadog</strong> and run Tenable scans under <strong>PCI-DSS</strong>.",
+          "Opero servicios core de AWS (EC2, ALB, IAM, VPC, CloudWatch) y un domain controller en Windows Server, analizo fallas en <strong>Datadog</strong> y corro escaneos de Tenable bajo <strong>PCI-DSS</strong>.")
+      ]
+    },
+    {
+      title: T("Infrastructure Field Support", "Infrastructure Field Support"),
+      org: "VR4",
+      when: T("Oct 2022 – Apr 2024", "Oct 2022 – Abr 2024"),
+      where: "CABA, Argentina",
+      tasks: [
+        T("Answered on-site part replacement calls for <strong>NetApp</strong> systems (disks, motherboards) as a NetApp partner.",
+          "Atendí llamados de reemplazo de partes on-site en equipos <strong>NetApp</strong> (discos, motherboards) como partner de NetApp."),
+        T("Supported the IT infrastructure of small and mid-size clients remotely, on their VPS or on servers through iLO.",
+          "Di soporte de infraestructura IT a clientes chicos y medianos de forma remota, en sus VPS o en servidores vía iLO."),
+        T("Saw client projects through: on-prem to <strong>cloud migrations</strong>, storage mirroring and MetroCluster setups.",
+          "Acompañé proyectos de clientes: <strong>migraciones</strong> de on-prem a cloud, storage mirroring y MetroCluster.")
+      ]
+    },
+    {
+      title: T("Software-Defined Datacenter Field Support", "Software-Defined Datacenter Field Support"),
+      org: "Wetcom",
+      when: T("Jan 2021 – Oct 2022", "Ene 2021 – Oct 2022"),
+      where: "CABA, Argentina",
+      tasks: [
+        T("Managed <strong>VMware</strong> for a pod of about 10 clients: ESXi host and VM lifecycle in vCenter, plus some vSAN.",
+          "Administré <strong>VMware</strong> para un pod de unos 10 clientes: lifecycle de hosts ESXi y VMs en vCenter, más algo de vSAN."),
+        T("Kept VM and datastore backups running in <strong>Veeam B&amp;R</strong>, fixing the causes of warnings and errors.",
+          "Mantuve en marcha los backups de VMs y datastores en <strong>Veeam B&amp;R</strong>, resolviendo las causas de warnings y errores.")
+      ]
+    }
+  ],
+  skills: [
+    { name: T("Cloud and IaC", "Cloud e IaC"), tags: ["AWS", "EKS", "SageMaker", "Terraform", "IAM", "VPC"] },
+    { name: T("CI/CD and automation", "CI/CD y automatización"), tags: ["Bitbucket Pipelines", "Git", T("Jira automation", "Automatización en Jira"), "Rundeck", "Ansible", "MLOps"] },
+    { name: T("Systems and containers", "Sistemas y contenedores"), tags: ["Ubuntu", "Docker", "Kubernetes", "Windows Server", "Active Directory"] },
+    { name: T("Security and monitoring", "Seguridad y monitoreo"), tags: ["Tenable", "PCI-DSS", "Datadog", "CloudWatch", T("Pipeline security checks", "Seguridad en pipelines")] },
+    { name: T("Datacenter", "Datacenter"), tags: ["VMware vSphere", "vSAN", "NetApp", "MetroCluster", "SAN / NAS", "Veeam B&amp;R"] }
+  ],
+  certs: [
+    { name: "AWS Certified Cloud Practitioner", by: T("AWS · Nov 2023", "AWS · Nov 2023") },
+    { name: "NetApp Certified Storage Installation Engineer", by: T("NetApp · Oct 2023", "NetApp · Oct 2023") },
+    { name: "NetApp Certified Technology Associate", by: T("NetApp · Jul 2023", "NetApp · Jul 2023") }
+  ],
+  langs: [
+    { name: T("Spanish", "Español"), level: T("Native", "Nativo") },
+    { name: T("English", "Inglés"), level: T("C1 · CAE grade B, 2019", "C1 · CAE nota B, 2019") },
+    { name: T("Italian", "Italiano"), level: T("Beginner", "Principiante") },
+    { name: T("Japanese", "Japonés"), level: T("Beginner", "Principiante") }
+  ],
+  edu: {
+    name: T("High School Degree in Information Technology", "Técnico en Informática"),
+    by: T("Instituto Leonardo Murialdo · Villa Bosch · 2013 – 2019", "Instituto Leonardo Murialdo · Villa Bosch · 2013 – 2019")
+  }
+};
+
+const ICON = {
+  mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  link: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.500C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></svg>'
+};
+
+/* Which work each skill shows up in: skill label -> pattern matched against task text. */
+const KEYS = {
+  "AWS": "AWS|EC2|EKS|SageMaker", "EKS": "EKS", "SageMaker": "SageMaker", "Terraform": "Terraform",
+  "IAM": "\\bIAM\\b", "VPC": "\\bVPC\\b",
+  "Bitbucket Pipelines": "Bitbucket|CI/CD", "Git": "pull request|repos", "Jira automation": "Jira",
+  "Rundeck": "Rundeck", "Ansible": "Ansible", "MLOps": "SageMaker",
+  "Ubuntu": "Ubuntu", "Docker": "EKS", "Kubernetes": "EKS", "Windows Server": "Windows Server", "Active Directory": "domain controller",
+  "Tenable": "Tenable", "PCI-DSS": "PCI-DSS", "Datadog": "Datadog", "CloudWatch": "CloudWatch",
+  "Pipeline security checks": "security and audit|seguridad y auditoría",
+  "VMware vSphere": "VMware|ESXi|vCenter", "vSAN": "vSAN", "NetApp": "NetApp", "MetroCluster": "MetroCluster",
+  "SAN / NAS": "storage|NetApp|datastore", "Veeam B&amp;R": "Veeam"
+};
+const NAME = "Gianfranco Casetta";
+const canMove = !!window.gsap && !matchMedia("(prefers-reduced-motion: reduce)").matches
+  && !matchMedia("print").matches && !/[?&]static/.test(location.search);
+const splitName = s => s.split(" ").map(w =>
+  `<span class="w" aria-hidden="true">${[...w].map(c => `<span class="c">${c}</span>`).join("")}</span>`).join(" ");
+const gridCanvas = Object.assign(document.createElement("canvas"), { className: "grid" });
+gridCanvas.setAttribute("aria-hidden", "true");
+let tl = null;
+
+/* End of the intro: letters start reacting to the pointer. Before printing the
+   name goes back to plain text so the PDF text stays clean. */
+function settle(flat) {
+  if (tl) { tl.progress(1).kill(); tl = null; }
+  const n = document.querySelector(".name");
+  if (n && n.firstElementChild) {
+    if (flat === true) { n.textContent = NAME; n.classList.remove("live"); } else n.classList.add("live");
+  }
+  if (window.gsap) gsap.set("#sheet *:not(canvas)", { clearProps: "all" });
+}
+
+const sheet = document.getElementById("sheet");
+let pinned = null;
+function trace(tag) {
+  sheet.querySelectorAll(".hit, .on").forEach(e => e.classList.remove("hit", "on"));
+  let n = 0;
+  if (tag) {
+    const re = new RegExp(tag.dataset.k, "i");
+    sheet.querySelectorAll(".tasks li").forEach(li => { if (re.test(li.textContent)) { li.classList.add("hit"); n++; } });
+    tag.classList.add("on");
+  }
+  sheet.classList.toggle("tracing", n > 0);
+}
+const skillAt = e => e.target.closest && e.target.closest(".tags li[data-k]");
+sheet.addEventListener("pointerover", e => { const s = skillAt(e); if (s && e.pointerType === "mouse") trace(s); });
+sheet.addEventListener("pointerout", e => { if (skillAt(e) && e.pointerType === "mouse") trace(pinned); });
+sheet.addEventListener("click", e => { const s = skillAt(e); pinned = s && s !== pinned ? s : null; trace(pinned); });
+sheet.addEventListener("keydown", e => {
+  const s = skillAt(e);
+  if (s && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pinned = s !== pinned ? s : null; trace(pinned); }
+});
+document.addEventListener("pointermove", e => {
+  const n = e.pointerType === "mouse" && document.querySelector(".name.live");
+  if (!n) return;
+  n.querySelectorAll(".c").forEach(c => {
+    const r = c.getBoundingClientRect();
+    const d = Math.hypot(e.clientX - r.left - r.width / 2, e.clientY - r.top - r.height / 2);
+    c.style.setProperty("--k", Math.max(0, 1 - d / 120).toFixed(3));
+  });
+});
+
+function intro() {
+  const focus = document.querySelector(".role span");
+  gridCanvas.ping(40, 56);
+  tl = gsap.timeline({ defaults: { ease: "power3.out", duration: .6 }, onComplete: settle });
+  tl.from(".name .c", { yPercent: 120, duration: .8, stagger: .024, ease: "power4.out" })
+    .from(".role b", { autoAlpha: 0, x: -14 }, "-=.5");
+  if (window.ScrambleTextPlugin) {
+    gsap.registerPlugin(ScrambleTextPlugin);
+    tl.from(focus, { autoAlpha: 0, duration: .2 }, "<")
+      .to(focus, { duration: 1.1, ease: "none", scrambleText: { text: focus.textContent, chars: "01/<>_-", speed: .5 } }, "<");
+  } else {
+    tl.from(focus, { autoAlpha: 0 }, "<");
+  }
+  tl.from(".about, .contact li", { autoAlpha: 0, y: 10, stagger: .07 }, "-=.9")
+    .from("h2", { autoAlpha: 0, y: 8, stagger: .06 }, "-=.35")
+    .from(".jobs", { "--rail": 0, duration: 1.2, ease: "power2.inOut" }, "<")
+    .from(".job", { "--dot": 0, duration: .45, stagger: .3, ease: "back.out(3)" }, "<+.05")
+    .from(".job > *, .main .list li, .langs li", { autoAlpha: 0, x: -10, stagger: .04, duration: .45 }, "<")
+    .from(".side .group h3, .side .list li", { autoAlpha: 0, y: 8, stagger: .05, duration: .45 }, "<+.1")
+    .from(".tags li", { autoAlpha: 0, scale: .7, duration: .3, stagger: { each: .014, from: "random" } }, "<");
+}
+
+function render(lang, mode) {
+  const animate = canMove && mode === "intro";
+  if (tl) { tl.kill(); tl = null; }
+  pinned = null; sheet.classList.remove("tracing");
+  const tag = x => {
+    const k = KEYS[typeof x === "string" ? x : x.en];
+    return `<li${k ? ` data-k="${k}" tabindex="0" role="button"` : ""}>${t(x)}</li>`;
+  };
+  const t = v => (v && typeof v === "object" && "en" in v) ? v[lang] : v;
+  const job = j => `
+    <li class="job${j.now ? " now" : ""}">
+      <h3>${t(j.title)}</h3>
+      <div class="meta"><b>${j.org}</b><span>${t(j.when)}</span><span>${j.where}</span></div>
+      <ul class="tasks">${j.tasks.map(x => `<li>${t(x)}</li>`).join("")}</ul>
+    </li>`;
+  document.documentElement.lang = lang;
+  document.getElementById("sheet").innerHTML = `
+    <header class="head">
+      <h1 class="name${canMove && !animate ? " live" : ""}" aria-label="${NAME}">${canMove ? splitName(NAME) : NAME}</h1>
+      <p class="role"><b>${CV.role}</b><span>${t(CV.focus)}</span></p>
+      <p class="about">${t(CV.about)}</p>
+      <ul class="contact">
+        <li>${ICON.mail}<a href="mailto:casettagian@gmail.com">casettagian@gmail.com</a></li>
+        <li>${ICON.link}<a href="https://www.linkedin.com/in/kzgian" target="_blank" rel="noopener">linkedin.com/in/kzgian</a></li>
+        <li>${ICON.pin}${t(CV.place)}</li>
+      </ul>
+    </header>
+    <div class="cols">
+      <div class="main">
+        <section>
+          <h2>${t(CV.h.work)}</h2>
+          <ul class="jobs">${CV.jobs.map(job).join("")}</ul>
+        </section>
+        <section>
+          <h2>${t(CV.h.edu)}</h2>
+          <ul class="list"><li><b>${t(CV.edu.name)}</b><span>${t(CV.edu.by)}</span></li></ul>
+        </section>
+      </div>
+      <aside class="side">
+        <section class="skills">
+          <h2>${t(CV.h.skills)}</h2>
+          <p class="hint">${t(CV.hint)}</p>
+          ${CV.skills.map(g => `<div class="group"><h3>${t(g.name)}</h3><ul class="tags">${g.tags.map(tag).join("")}</ul></div>`).join("")}
+        </section>
+        <section>
+          <h2>${t(CV.h.certs)}</h2>
+          <ul class="list">${CV.certs.map(c => `<li><b>${c.name}</b><span>${t(c.by)}</span></li>`).join("")}</ul>
+        </section>
+        <section>
+          <h2>${t(CV.h.langs)}</h2>
+          <ul class="langs">${CV.langs.map(l => `<li><b>${t(l.name)}</b><span>${t(l.level)}</span></li>`).join("")}</ul>
+        </section>
+      </aside>
+    </div>`;
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  document.getElementById("pdf").href = `Gianfranco-Casetta-CV-${lang.toUpperCase()}.pdf`;
+  document.querySelector(".head").prepend(gridCanvas);
+  if (animate) intro();
+  else if (canMove && mode === "swap") {
+    gsap.from(".role span, .about, .job, .main section + section, .side section",
+      { autoAlpha: 0, y: 6, duration: .35, stagger: .04, ease: "power2.out", clearProps: "all" });
+  }
+}
+
+/* Header grid: dots light up near the pointer and a few packets travel the rows. */
+(function liveGrid() {
+  const ctx = gridCanvas.getContext("2d");
+  const STEP = 18, OFF = 13, amber = getComputedStyle(document.documentElement).getPropertyValue("--amber").trim() || "#f4ab3c";
+  let w = 0, h = 0, cw = 0, px = -999, py = -999, last = 0;
+  const ripples = [];
+  gridCanvas.ping = (x, y) => ripples.push({ x, y, t: performance.now() });
+  const packets = [0, 1, 2, 3].map(() => ({ x: 0, y: 0, v: 0, wait: Math.random() * 3 }));
+  const spawn = p => {
+    p.y = OFF + STEP * Math.floor(Math.random() * Math.max(1, Math.floor((h - OFF) / STEP)));
+    p.v = (60 + Math.random() * 70) * (Math.random() < .5 ? 1 : -1);
+    p.x = p.v > 0 ? -40 : w + 40;
+    p.wait = 0;
+  };
+  function size() {
+    const r = gridCanvas.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
+    if (!r.width) return;
+    w = r.width; h = r.height; cw = gridCanvas.clientWidth;
+    gridCanvas.width = Math.round(w * d); gridCanvas.height = Math.round(h * d);
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  function frame(now) {
+    const dt = Math.min(.05, (now - last) / 1000 || 0); last = now;
+    if (gridCanvas.isConnected && gridCanvas.clientWidth !== cw) size();
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = amber;
+    for (let i = ripples.length - 1; i >= 0; i--) {
+      const rp = ripples[i], age = (now - rp.t) / 1000;
+      if (age > 1.8) { ripples.splice(i, 1); continue; }
+      const rad = age * 420, fade = 1 - age / 1.8;
+      for (let x = OFF; x < w; x += STEP) for (let y = OFF; y < h; y += STEP) {
+        const d = Math.abs(Math.hypot(x - rp.x, y - rp.y) - rad);
+        if (d > 28) continue;
+        const k = 1 - d / 28;
+        ctx.globalAlpha = k * fade * .9;
+        ctx.beginPath(); ctx.arc(x, y, 1 + k * 1.3, 0, 6.2832); ctx.fill();
+      }
+    }
+    const R = 120;
+    if (px > -R && px < w + R && py > -R && py < h + R) {
+      const x0 = Math.max(0, Math.floor((px - R - OFF) / STEP)), x1 = Math.ceil((px + R - OFF) / STEP);
+      const y0 = Math.max(0, Math.floor((py - R - OFF) / STEP)), y1 = Math.ceil((py + R - OFF) / STEP);
+      for (let i = x0; i <= x1; i++) for (let j = y0; j <= y1; j++) {
+        const x = OFF + i * STEP, y = OFF + j * STEP, k = 1 - Math.hypot(x - px, y - py) / R;
+        if (k <= 0) continue;
+        ctx.globalAlpha = k * k * .9;
+        ctx.beginPath(); ctx.arc(x, y, 1 + k * 1.4, 0, 6.2832); ctx.fill();
+      }
+    }
+    for (const p of packets) {
+      if (p.wait > 0) { p.wait -= dt; if (p.wait <= 0) spawn(p); continue; }
+      p.x += p.v * dt;
+      if (p.x < -60 || p.x > w + 60) { p.wait = 1 + Math.random() * 4; continue; }
+      const dir = Math.sign(p.v);
+      for (let s = 0; s < 14; s++) {
+        ctx.globalAlpha = .55 * (1 - s / 14);
+        ctx.fillRect(p.x - dir * s * 3, p.y - .75, 3, 1.5);
+      }
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+  document.addEventListener("pointermove", e => {
+    const r = gridCanvas.getBoundingClientRect();
+    px = e.clientX - r.left; py = e.clientY - r.top;
+  });
+  document.addEventListener("pointerleave", () => { px = py = -999; });
+  document.addEventListener("pointerdown", e => {
+    const r = gridCanvas.getBoundingClientRect();
+    if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom)
+      gridCanvas.ping(e.clientX - r.left, e.clientY - r.top);
+  });
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) requestAnimationFrame(frame);
+})();
+window.addEventListener("beforeprint", () => { pinned = null; trace(null); settle(true); });
+
+const fromHash = () => (location.hash === "#es" ? "es" : "en");
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => {
+  const lang = b.dataset.lang;
+  try { history.replaceState(null, "", "#" + lang); } catch (e) { location.hash = lang; }
+  render(lang, "swap");
+}));
+window.addEventListener("hashchange", () => render(fromHash(), "swap"));
+render(fromHash(), "intro");
+</script>
